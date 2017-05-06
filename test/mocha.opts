@@ -1,0 +1,2 @@
+--compilers ts:ts-node/register,tsx:ts-node/register,js:ts-node/register,jsx:ts-node/register
+src/**/*.{spec,test}.{ts,tsx,js,jsx}

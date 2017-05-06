@@ -1,0 +1,75 @@
+{
+  "name": "example",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "build": "ts-node fuse.ts",
+    "prod": "cross-env NODE_ENV=production npm run build",
+    "start": "npm run -s build -- -d -t",
+    "dev": "npm run -s build -- -d",
+    "watch": "npm run -s build -- -w",
+    "test": "mocha",
+    "cover": "nyc mocha",
+    "clean": "rimraf .nyc_output coverage .fusebox public"
+  },
+  "devDependencies": {
+    "@types/chai": "^3.5.2",
+    "@types/chai-enzyme": "^0.6.1",
+    "@types/enzyme": "^2.8.0",
+    "@types/mocha": "^2.2.41",
+    "@types/node": "^7.0.18",
+    "@types/react": "^15.0.24",
+    "@types/react-dom": "^15.5.0",
+    "@types/react-redux": "^4.4.40",
+    "@types/sinon": "^2.2.1",
+    "chai": "^3.5.0",
+    "chai-enzyme": "^0.6.1",
+    "cross-env": "^4.0.0",
+    "enzyme": "^2.8.2",
+    "fuse-box": "2.0.0-beta.12",
+    "mocha": "^3.3.0",
+    "nyc": "^10.3.2",
+    "react-addons-test-utils": "^15.5.1",
+    "rimraf": "^2.6.1",
+    "sinon": "^2.2.0",
+    "ts-node": "^3.0.3",
+    "tslib": "^1.6.1",
+    "typescript": "^2.3.2",
+    "uglify-js": "^2.8.22"
+  },
+  "dependencies": {
+    "react": "^15.5.4",
+    "react-dom": "^15.5.4",
+    "react-jss": "5.4.1",
+    "react-redux": "^5.0.4",
+    "redux": "^3.6.0"
+  },
+  "nyc": {
+    "include": [
+      "src/**/*.ts",
+      "src/**/*.tsx",
+      "src/**/*.js",
+      "src/**/*.jsx"
+    ],
+    "exclude": [
+      "src/**/*.spec.*",
+      "src/**/*.test.*"
+    ],
+    "extension": [
+      ".ts",
+      ".tsx",
+      ".js",
+      ".jsx"
+    ],
+    "require": [
+      "ts-node/register"
+    ],
+    "reporter": [
+      "text-summary",
+      "html"
+    ],
+    "sourceMap": true,
+    "instrument": true
+  }
+}

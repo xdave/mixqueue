@@ -1,0 +1,30 @@
+{
+    "compilerOptions": {
+        "target": "es5",
+        "module": "commonjs",
+        "allowJs": true,
+        "checkJs": true,
+        "strict": true,
+        "importHelpers": true,
+        "experimentalDecorators": true,
+        "downlevelIteration": true,
+        "jsx": "react",
+        "lib": ["dom", "esnext"],
+        "sourceMap": true,
+        "allowSyntheticDefaultImports": true,
+        "typeRoots": [
+            "./node_modules/@types",
+            "./typings"
+        ]
+    },
+    "include": [
+        "**/*.ts",
+        "**/*.tsx",
+        "**/*.js",
+        "**/*.jsx"
+    ],
+    "exclude": [
+        "node_modules/**/*"
+    ],
+    "compileOnSave": false
+}
