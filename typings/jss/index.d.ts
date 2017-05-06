@@ -1,7 +1,6 @@
 declare module 'jss' {
-    export interface Middleware {
+    export type Middleware = any;
 
-    }
     export interface JSS {
         use(middleware: Middleware): void;
 
