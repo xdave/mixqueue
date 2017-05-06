@@ -27,6 +27,7 @@ export const Foo: React.SFC<Props & Actions & Styles> = props => (
         </button>
         <hr />
         <div className={props.classes.container}>
+            <Stuff />
             <Stuff textColor="lightgreen" />
         </div>
     </div>
@@ -41,5 +42,5 @@ export const mapDispatch = {
 };
 
 export default connect(mapState, mapDispatch)(
-    injectStyles(styles)<Props>(Foo)
+    injectStyles(styles)(Foo)
 );

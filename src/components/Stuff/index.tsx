@@ -23,4 +23,4 @@ export const Stuff: React.SFC<Props & Styles> = ({ classes }) => (
     </div>
 );
 
-export default injectStyles(styles)<Props>(Stuff);
+export default injectStyles(styles)(Stuff);
