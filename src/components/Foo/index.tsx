@@ -1,5 +1,4 @@
 import * as React from 'react';
-// import { css } from 'aphrodite';
 import { connect } from 'react-redux';
 import { State } from '../../types';
 import { UserAction } from '../../actions/user';
