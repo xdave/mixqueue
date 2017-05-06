@@ -26,7 +26,9 @@ export const Foo: React.SFC<Props & Actions & Styles> = props => (
             Set full name to 'John Smith'
         </button>
         <hr />
-        <Stuff textColor="lightgreen" />
+        <div className={props.classes.container}>
+            <Stuff textColor="lightgreen" />
+        </div>
     </div>
 );
 

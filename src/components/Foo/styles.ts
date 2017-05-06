@@ -5,5 +5,10 @@ export default {
         boxShadow: '5px 5px 5px black',
         backgroundColor: 'rgb(17, 57, 122)',
         color: 'rgb(184, 196, 216)'
+    },
+    container: {
+        '&:hover': {
+            background: 'blue',
+        }
     }
 };

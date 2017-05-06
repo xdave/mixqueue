@@ -12,7 +12,7 @@ describe('<Foo />', () => {
         const defaultProps = {
             fullName: 'John Smith',
             setFullName: spy(),
-            classes: fakeSheet('card')
+            classes: fakeSheet('card', 'container')
         };
 
         it('should render without error', () => {
