@@ -50,7 +50,11 @@ const fuse = FuseBox.init({
     },
     plugins: [
         EnvPlugin({ NODE_ENV: process.env.NODE_ENV }),
-        WebIndexPlugin({ template }),
+        WebIndexPlugin({
+            template,
+            title: 'MixQueue',
+            path: prod ? '/mixqueue' : undefined
+        }),
         JSONPlugin(),
         SourceMapPlainJsPlugin(),
         tests && new MochaRunner(mochaGlob, mochaOptions, mochaBundles),
