@@ -12,19 +12,24 @@
         "lib": ["dom", "esnext"],
         "sourceMap": true,
         "allowSyntheticDefaultImports": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
         "typeRoots": [
-            "./node_modules/@types",
-            "./typings"
+            "node_modules/@types",
+            "typings"
         ]
     },
     "include": [
-        "**/*.ts",
-        "**/*.tsx",
-        "**/*.js",
-        "**/*.jsx"
+        "src",
+        "test",
+        "typings",
+        "fuse.ts",
+        "MochaRunner.ts",
+        "gentracklist.ts"
     ],
     "exclude": [
-        "node_modules/**/*"
+        "node_modules",
+        "node_modules/preact/**/*.d.ts"
     ],
     "compileOnSave": false
 }

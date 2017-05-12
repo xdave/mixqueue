@@ -1,5 +1,7 @@
 import { combineReducers, Reducer } from 'redux';
 import { State } from '../types';
-import { user } from './user';
+import { audio } from './audio';
 
-export default combineReducers({ user }) as Reducer<State>;
+export default combineReducers({
+    audio
+}) as Reducer<State>;
