@@ -10,4 +10,5 @@ export const getAudioSources = (files: MixFile[], mixId: string) =>
 export const getPeaksImage = (files: MixFile[], mixId: string) =>
     files
         .filter(f => /png/i.test(f.format))
-        .map(f => `https://archive.org/download/${mixId}/${f.name}`)[0];
+        .map(f => `https://archive.org/download/${mixId}/${f.name}`)[0]
+        || '';
