@@ -25,7 +25,8 @@
         "typings",
         "fuse.ts",
         "MochaRunner.ts",
-        "gentracklist.ts"
+        "gentracklist.ts",
+        "updateManifest.ts"
     ],
     "exclude": [
         "node_modules",

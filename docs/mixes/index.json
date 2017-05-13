@@ -1,40 +1,53 @@
 {
+    "responseHeader": {
+        "status": 0,
+        "QTime": 18,
+        "params": {
+            "q": "(title:\"Dave Gradwell\"^100 OR description:\"Dave Gradwell\"^15 OR collection:\"Dave Gradwell\"^10 OR language:\"Dave Gradwell\"^10 OR text:\"Dave Gradwell\"^1) (title:Mix^100 OR description:Mix^15 OR collection:Mix^10 OR language:Mix^10 OR text:Mix^1)",
+            "qin": "\"Dave Gradwell\" Mix",
+            "fl": "identifier,title,date",
+            "wt": "json",
+            "start": 0
+        }
+    },
     "response": {
+        "numFound": 7,
+        "start": 0,
         "docs": [
             {
-                "identifier": "DaveGradwellFavoritesMixSessionDec312016",
-                "title": "Dave Gradwell - Favorites Mix Session (Dec 31, 2016)",
-                "date": "Dec 31, 2016"
-            },
-            {
-                "identifier": "DaveGradwellMixSessionApril32017",
-                "title": "Dave Gradwell - Mix Session (April 3, 2017)",
-                "date": "April 3, 2017"
-            },
-            {
-                "identifier": "DaveGradwellMixSessionApril9th2017",
-                "title": "Dave Gradwell - Mix Session (April 9th, 2017)",
-                "date": "April 9, 2017"
-            },
-            {
-                "identifier": "DaveGradwellMixSessionApril16th2017",
-                "title": "Dave Gradwell - Mix Session (April 16th, 2017)",
-                "date": "April 16, 2017"
-            },
-            {
+                "date": "2017-04-19T00:00:00Z",
                 "identifier": "DaveGradwellMixSessionApril19th2017",
-                "title": "Dave Gradwell - Mix Session (April 19th, 2017)",
-                "date": "April 19, 2017"
+                "title": "Dave Gradwell - Mix Session (April 19th, 2017)"
             },
             {
-                "identifier": "DaveGradwellMixSessionApril23rd2017",
-                "title": "Dave Gradwell - Mix Session (April 23rd, 2017)",
-                "date": "April 23, 2017"
-            },
-            {
+                "date": "2017-04-29T00:00:00Z",
                 "identifier": "DaveGradwellMixSessionApril29th2017",
-                "title": "Dave Gradwell - Mix Session (April 29th, 2017)",
-                "date": "April 29, 2017"
+                "title": "Dave Gradwell - Mix Session (April 29th, 2017)"
+            },
+            {
+                "date": "2017-04-03T00:00:00Z",
+                "identifier": "DaveGradwellMixSessionApril32017",
+                "title": "Dave Gradwell - Mix Session (April 3, 2017)"
+            },
+            {
+                "date": "2017-04-23T00:00:00Z",
+                "identifier": "DaveGradwellMixSessionApril23rd2017",
+                "title": "Dave Gradwell - Mix Session (April 23rd, 2017)"
+            },
+            {
+                "date": "2017-04-16T00:00:00Z",
+                "identifier": "DaveGradwellMixSessionApril16th2017",
+                "title": "Dave Gradwell - Mix Session (April 16th, 2017)"
+            },
+            {
+                "date": "2017-04-09T00:00:00Z",
+                "identifier": "DaveGradwellMixSessionApril9th2017",
+                "title": "Dave Gradwell - Mix Session (April 9th, 2017)"
+            },
+            {
+                "date": "2016-12-31T00:00:00Z",
+                "identifier": "DaveGradwellFavoritesMixSessionDec312016",
+                "title": "Dave Gradwell - Favorites Mix Session (Dec 31, 2016)"
             }
         ]
     }
