@@ -79,6 +79,7 @@ export interface Audio {
     playing: boolean;
     duration: number;
     seeking: boolean;
+    waiting: boolean;
 }
 
 export interface State {

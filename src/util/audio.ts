@@ -45,6 +45,12 @@ export class AudioControl {
         this.audio.element.removeEventListener('timeupdate', this.timeUpdate);
         this.audio.element.addEventListener('timeupdate', this.timeUpdate);
 
+        this.audio.element.removeEventListener('playing', this.onPlaying);
+        this.audio.element.addEventListener('playing', this.onPlaying);
+
+        this.audio.element.removeEventListener('waiting', this.onWaiting);
+        this.audio.element.addEventListener('waiting', this.onWaiting);
+
         this.audio.element.removeEventListener('play', this.onPlay);
         this.audio.element.addEventListener('play', this.onPlay);
 
@@ -76,6 +82,18 @@ export class AudioControl {
     pause = () => {
         this.audio.element.pause();
     };
+
+    stop = () => {
+        this.audio.element.pause();
+        this.audio.element.currentTime = 0;
+    };
+
+    onWaiting = () => {
+        this.actions.setWaiting(true);
+    }
+    onPlaying = () => {
+        this.actions.setWaiting(false);
+    }
 
     onPlay = () => {
         this.actions.setPlayingDone(true);

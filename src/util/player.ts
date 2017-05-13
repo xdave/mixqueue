@@ -6,3 +6,8 @@ export const getAudioSources = (files: MixFile[], mixId: string) =>
         .slice()
         .sort(a => (/ogg/i).test(a.format) ? -1 : 1)
         .map(f => `https://archive.org/download/${mixId}/${f.name}`);
+
+export const getPeaksImage = (files: MixFile[], mixId: string) =>
+    files
+        .filter(f => /png/i.test(f.format))
+        .map(f => `https://archive.org/download/${mixId}/${f.name}`)[0];

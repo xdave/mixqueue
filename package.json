@@ -59,6 +59,7 @@
     "preact-tap-event-plugin": "^0.1.2",
     "react": "^15.5.4",
     "react-dom": "^15.5.4",
+    "react-jss": "^5.4.1",
     "react-redux": "^5.0.4",
     "react-tap-event-plugin": "^2.0.1",
     "redux": "^3.6.0",

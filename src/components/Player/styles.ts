@@ -1,7 +1,7 @@
-import { StyleSheet } from 'aphrodite';
+// import { StyleSheet } from 'aphrodite';
 
-export const styles = StyleSheet.create({
-    player: {
-        width: '100%'
-    }
-});
+// export const styles = StyleSheet.create({
+//     player: {
+//         width: '100%'
+//     }
+// });

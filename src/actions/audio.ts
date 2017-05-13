@@ -20,6 +20,7 @@ export type AudioAction
     | { type: 'AUDIO_SET_ACTIVE_TRACK', track: Track }
     | { type: 'AUDIO_SET_CURRENT_TIME_DONE', currentTime: number }
     | { type: 'AUDIO_SET_PLAYING_DONE', playing: boolean }
+    | { type: 'AUDIO_SET_WAITING', waiting: boolean }
     | { type: 'AUDIO_MIXES_FETCHING' }
     | { type: 'AUDIO_MIXES_FETCHED', mixes: Mix[] }
     | { type: 'AUDIO_MIX_FETCHING' }
@@ -69,6 +70,11 @@ export const setPlayingDone = (playing: boolean): AudioAction => ({
     playing
 });
 
+export const setWaiting = (waiting: boolean): AudioAction => ({
+    type: 'AUDIO_SET_WAITING',
+    waiting
+});
+
 export const mixesFetching = (): AudioAction => ({
     type: 'AUDIO_MIXES_FETCHING'
 });
@@ -107,6 +113,34 @@ export const seek =
             }
         };
 
+export const skipPrevious =
+    (): ThunkAction<void, State, void> =>
+        (dispatch, getState) => {
+            const { activeMixes, activeTracks} = getState().audio;
+            const [mix] = activeMixes;
+            const [active] = activeTracks;
+            const { tracks } = mix.cueSheet;
+            const track = tracks.find(t => t.number === active.number - 1)
+                || tracks[tracks.length - 1];
+            if (track && active.number !== track.number) {
+                dispatch(seek(track.time));
+            }
+        };
+
+export const skipNext =
+    (): ThunkAction<void, State, void> =>
+        (dispatch, getState) => {
+            const { activeMixes, activeTracks } = getState().audio;
+            const [mix] = activeMixes;
+            const [active] = activeTracks;
+            const { tracks } = mix.cueSheet;
+            const track = tracks.find(t => t.number === active.number + 1)
+                || tracks[0];
+            if (track && active.number !== track.number) {
+                dispatch(seek(track.time));
+            }
+        };
+
 export const setPlaying =
     (play: boolean): ThunkAction<void, State, void> =>
         async (_, getState) => {
@@ -117,6 +151,15 @@ export const setPlaying =
                 } else {
                     await control.pause();
                 }
+            }
+        };
+
+export const setStop =
+    (): ThunkAction<void, State, void> =>
+        async (_, getState) => {
+            const { control } = getState().audio;
+            if (control) {
+                await control.stop();
             }
         };
 

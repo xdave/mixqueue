@@ -1,14 +1,52 @@
 import * as React from 'react';
-import { connect } from 'react-redux';
-import { css } from 'aphrodite';
-import { styles } from "./styles";
+import { bindActionCreators, Dispatch } from 'redux';
 import { State, Mix, Track } from "../../types/index";
 import * as actions from '../../actions/audio';
-import { AudioControl } from "../../util/audio";
+import { getPeaksImage } from "../../util/player";
+import { connectWithStyle } from '../../util/jss';
+const IconButton = require('material-ui/IconButton').default;
+const PlayArrow = require('material-ui-icons/PlayArrow').default;
+const Pause = require('material-ui-icons/Pause').default;
+const Stop = require('material-ui-icons/Stop').default;
+const SkipPrevious = require('material-ui-icons/SkipPrevious').default;
+const SkipNext = require('material-ui-icons/SkipNext').default;
+const { CircularProgress } = require('material-ui/Progress');
 
-const PEAKS_WIDTH = 1000;
-const PEAKS_HEIGHT = 125;
+const PEAKS_WIDTH = 800;
+const PEAKS_HEIGHT = 100;
 const MARKER_WIDTH = 1;
+
+interface Props {
+    currentTime: number;
+    activeMixes: Mix[];
+    activeTracks: Track[];
+    playing: boolean;
+    duration: number;
+    seeking: boolean;
+    waiting: boolean;
+}
+
+const styleSheet: React.CSSProperties = {
+    progress: {
+    },
+    slider: { width: '100%' },
+    peaks: {
+        backgroundColor: 'rgb(20,74,160)',
+        width: `${PEAKS_WIDTH}px`,
+        height: `${PEAKS_HEIGHT}px`,
+        'background-image': ({ activeMixes }: Props) => {
+            const [mix] = activeMixes;
+            return `url("${getPeaksImage(mix.files, mix.id)}")`;
+        },
+        backgroundSize: `${PEAKS_WIDTH}px ${PEAKS_HEIGHT}px`,
+        backgroundRepeat: `no-repeat`
+    },
+    track: {
+        display: 'inline-block',
+        color: 'white',
+        height: '100%'
+    }
+};
 
 const secondsToTime = (totalSeconds: number) => {
     const hrs = Math.floor(totalSeconds / 3600);
@@ -52,36 +90,38 @@ const setPosFromX = (props: Props & typeof actions) =>
         props.setCurrentTime(time);
     };
 
-interface Props {
-    currentTime: number;
-    activeMixes: Mix[];
-    activeTracks: Track[];
-    control: AudioControl;
-    playing: boolean;
-    duration: number;
-    seeking: boolean;
-}
-
 const mapState = (state: State) => ({
     currentTime: state.audio.currentTime,
     activeMixes: state.audio.activeMixes,
     activeTracks: state.audio.activeTracks,
-    control: state.audio.control,
     playing: state.audio.playing,
     duration: state.audio.duration,
-    seeking: state.audio.seeking
+    seeking: state.audio.seeking,
+    waiting: state.audio.waiting
 });
 
-type PlayerType = React.SFC<Props & typeof actions>;
-export const Player: PlayerType = props => (
+const mapActions = (dispatch: Dispatch<actions.AudioAction>) =>
+    bindActionCreators({ ...actions }, dispatch);
+
+export default connectWithStyle(styleSheet, mapState, mapActions)(props => (
     <div>
         {props.activeMixes.map(mix =>
             <div key={`player-element-${mix.id}`}>
-                <button onClick={() => props.setPlaying(!props.playing)}>
-                    Play/Pause
-                </button>
+                <IconButton onTouchTap={() => props.skipPrevious()}>
+                    <SkipPrevious />
+                </IconButton>
+                <IconButton onTouchTap={() => props.setPlaying(!props.playing)}>
+                    {props.playing ? <Pause /> : <PlayArrow />}
+                </IconButton>
+                <IconButton onTouchTap={() => props.setStop()}>
+                    <Stop />
+                </IconButton>
+                <IconButton onTouchTap={() => props.skipNext()}>
+                    <SkipNext />
+                </IconButton>
+                {props.waiting && <CircularProgress size={20} />}
                 <input
-                    className={css(styles.player)}
+                    className={props.classes.slider}
                     type="range"
                     min={0}
                     max={props.duration}
@@ -104,67 +144,61 @@ export const Player: PlayerType = props => (
                 {secondsToTime(props.duration)}
 
                 <div className="peaks">
-                    {mix.files
-                        .filter(f => /png/i.test(f.format))
-                        .map(f => (
-                            <div key={`peak-file-${f.name}`}>
-                                <style>
-                                    .peaks-image {`{
-                                        background-color: rgb(20,74,160);
-                                        width: ${PEAKS_WIDTH}px;
-                                        height: ${PEAKS_HEIGHT}px;
-                                        background-image: url("https://archive.org/download/${mix.id}/${f.name}");
-                                        background-size: ${PEAKS_WIDTH}px ${PEAKS_HEIGHT}px;
-                                        background-repeat: no-repeat;
-                                    }
-                                    .peaks-image .track {
-                                        display: inline-block;
-                                        color: white;
-                                        height: 100%;
-                                    }
-                                    .peaks-image .track:hover {
-                                        background-color: rgba(37,99,198,.5) !important;
-                                    }`}
-                                </style>
+                    <div key={`peak-file-${mix.id}`}>
+                        <style>
+                            .peaks-image {`{
+                                background-color: rgb(20,74,160);
+                                width: ${PEAKS_WIDTH}px;
+                                height: ${PEAKS_HEIGHT}px;
+                                background-image: url("${getPeaksImage(mix.files, mix.id)}");
+                                background-size: ${PEAKS_WIDTH}px ${PEAKS_HEIGHT}px;
+                                background-repeat: no-repeat;
+                            }
+                            .peaks-image .track {
+                                display: inline-block;
+                                color: white;
+                                height: 100%;
+                            }
+                            .peaks-image .track:hover {
+                                background-color: rgba(37,99,198,.5) !important;
+                            }`}
+                        </style>
+                        <div
+                            className={props.classes.peaks}
+                            // style={{ backgroundImage: `url("${getPeaksImage(mix.files, mix.id)}")` }}
+                            onClick={setPosFromX(props)}
+                        >
+                            {props.duration > 0 && mix.cueSheet.tracks.map(track => (
                                 <div
-                                    className="peaks-image"
-                                    onClick={setPosFromX(props)}
-                                >
-                                    {props.duration > 0 && mix.cueSheet.tracks.map(track => (
-                                        <div
-                                            className="track"
-                                            title={`${track.title}`}
-                                            key={`peak-track-${track.title}`}
-                                            style={{
-                                                backgroundColor: track.title === props.activeTracks[0].title
-                                                    ? 'rgba(37,99,198,.35)' : 'rgba(0,0,0,0)',
-                                                width: `${getTrackWidth(track, mix.cueSheet.tracks, props.duration)}px`,
-                                                borderLeft: `${MARKER_WIDTH}px dotted rgba(255,255,255,0.3)`
-                                            }}>
-                                            <div style={{ float: 'left', display: 'absolute' }}>
-                                                {track.number}
-                                            </div>
-                                            <div style={{
-                                                display: 'absolute',
-                                                height: '100%',
-                                                width: track.title === props.activeTracks[0].title
-                                                    ? `${getTrackPosWidth(track, mix.cueSheet.tracks, props.currentTime, props.duration)}px`
-                                                    : '0px',
-                                                borderRight: track.title === props.activeTracks[0].title
-                                                    ? '1px dashed rgba(255,255,255,0.5)'
-                                                    : 'none',
-                                                marginLeft: '-1px'
-                                            }}></div>
-                                        </div>
-                                    ))}
+                                    className={props.classes.track}
+                                    title={`${track.title}`}
+                                    key={`peak-track-${track.title}`}
+                                    style={{
+                                        backgroundColor: track.title === props.activeTracks[0].title
+                                            ? 'rgba(37,99,198,.35)' : 'rgba(0,0,0,0)',
+                                        width: `${getTrackWidth(track, mix.cueSheet.tracks, props.duration)}px`,
+                                        borderLeft: `${MARKER_WIDTH}px dotted rgba(255,255,255,0.3)`
+                                    }}>
+                                    <div style={{ float: 'left', display: 'absolute' }}>
+                                        {track.number}
+                                    </div>
+                                    <div style={{
+                                        display: 'absolute',
+                                        height: '100%',
+                                        width: track.title === props.activeTracks[0].title
+                                            ? `${getTrackPosWidth(track, mix.cueSheet.tracks, props.currentTime, props.duration)}px`
+                                            : '0px',
+                                        borderRight: track.title === props.activeTracks[0].title
+                                            ? '1px dashed rgba(255,255,255,0.5)'
+                                            : 'none',
+                                        marginLeft: '-1px'
+                                    }}></div>
                                 </div>
-                            </div>
-                        ))
-                    }
+                            ))}
+                        </div>
+                    </div>
                 </div>
             </div>
         )}
     </div>
-);
-
-export default connect(mapState, { ...actions })(Player);
+));

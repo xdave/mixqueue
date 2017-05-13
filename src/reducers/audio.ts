@@ -10,7 +10,8 @@ const initial: Audio = {
     currentTime: 0,
     playing: false,
     duration: 0,
-    seeking: false
+    seeking: false,
+    waiting: false
 };
 
 export const audio = (state = initial, action: actions.AudioAction): Audio => {
@@ -54,6 +55,11 @@ export const audio = (state = initial, action: actions.AudioAction): Audio => {
             return {
                 ...state,
                 playing: action.playing
+            };
+        case 'AUDIO_SET_WAITING':
+            return {
+                ...state,
+                waiting: action.waiting
             };
         case 'AUDIO_MIXES_FETCHING':
             return state; // TODO: fetching flag
