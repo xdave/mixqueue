@@ -7,23 +7,18 @@ import { configureStore } from './store';
 import * as audioActions from './actions/audio'
 import reducer from './reducers';
 import AudioView from './components/AudioView';
-import { default as configureAudioControl, AudioControl } from "./util/audio";
+import configureAudioControl from "./util/audio";
 
-declare const window: {
-    __APP_INIT__: boolean;
-    __AUDIO_ELEMENT__: AudioControl;
-} & Window;
+tap();
 
 const store = configureStore(reducer);
 
 const main = async () => {
-    if (!window.__APP_INIT__) {
-        tap();
-        window.__AUDIO_ELEMENT__ = configureAudioControl(store);
-        store.dispatch(audioActions.setAudioControl(window.__AUDIO_ELEMENT__))
+    if (!store.getState().control) {
+        const control = configureAudioControl(store);
+        store.dispatch(audioActions.setAudioControl(() => control))
         store.dispatch(audioActions.mixesFetch());
     }
-    window.__APP_INIT__ = true;
 };
 
 class App extends React.PureComponent<{}, void> {

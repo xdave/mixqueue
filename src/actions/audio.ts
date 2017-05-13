@@ -1,4 +1,5 @@
 import * as fetchP from 'fetch-jsonp';
+import { fetchT } from '../util/fetchTimeout';
 import { ThunkAction } from 'redux-thunk'
 import { State, Mix, MixInfo, MixSearchResults, MixFile, Track } from '../types';
 import { AudioControl } from "../util/audio";
@@ -11,7 +12,7 @@ const searchURL = `${searchPage}?q=${searchTerm}&fl[]=identifier&fl[]=title&fl[]
 const fetchOptions: RequestInit = { mode: 'cors' };
 
 export type AudioAction
-    = { type: 'AUDIO_SET_CONTROL', control: AudioControl }
+    = { type: 'AUDIO_SET_CONTROL', control: () => AudioControl }
     | { type: 'AUDIO_SET_DURATION_DONE', duration: number }
     | { type: 'AUDIO_SEEK_START' }
     | { type: 'AUDIO_SEEK_END', position: number }
@@ -26,7 +27,7 @@ export type AudioAction
     | { type: 'AUDIO_MIX_FETCHING' }
     | { type: 'AUDIO_MIX_FETCHED', mix: Mix }
 
-export const setAudioControl = (control: AudioControl): AudioAction => ({
+export const setAudioControl = (control: () => AudioControl): AudioAction => ({
     type: 'AUDIO_SET_CONTROL',
     control
 });
@@ -147,9 +148,9 @@ export const setPlaying =
             const { control } = getState().audio;
             if (control) {
                 if (play) {
-                    await control.play();
+                    await control().play();
                 } else {
-                    await control.pause();
+                    await control().pause();
                 }
             }
         };
@@ -159,7 +160,7 @@ export const setStop =
         async (_, getState) => {
             const { control } = getState().audio;
             if (control) {
-                await control.stop();
+                await control().stop();
             }
         };
 
@@ -168,7 +169,7 @@ export const setSource =
         (dispatch, getState) => {
             const { control } = getState().audio;
             if (control) {
-                control.setSourceUrl(source);
+                control().setSourceUrl(source);
                 dispatch(setSourceDone(source));
             }
         };
@@ -178,8 +179,8 @@ export const setCurrentTime =
         (dispatch, getState) => {
             const { activeMixes, activeTracks, control } = getState().audio;
 
-            if (control && control.audio.element.currentTime != time) {
-                control.audio.element.currentTime = time;
+            if (control && control().audio.element.currentTime != time) {
+                control().audio.element.currentTime = time;
                 return;
             }
 
@@ -223,10 +224,19 @@ export const mixesFetch =
     (): ThunkAction<void, State, void> =>
         async dispatch => {
             dispatch(mixesFetching());
-            // const url = encodeURI(`${baseURL}/${searchURL}`);
-            // const response = await fetchP(url); // JSON-P needed 'cause no CORS.
-            const url = './mixes/index.json';
-            const response = await fetch(url);
+            const url1 = encodeURI(`${baseURL}/${searchURL}`);
+            const url2 = './mixes/index.json';
+            let response: Response;
+
+            try {
+                // JSON-P needed 'cause no CORS.
+                response = await fetchT(url1, { timeout: 2000 }, fetchP);
+            } catch (err) {
+                console.log(err, 'Using local mix manifest file...');
+                response = await fetch(url2);
+            }
+
+            //const response = await fetch(url);
             const json = await (response.json() as Promise<MixSearchResults>);
             const mixes = json.response.docs.map(doc => ({
                 id: doc.identifier,

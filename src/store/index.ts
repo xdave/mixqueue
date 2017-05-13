@@ -2,7 +2,7 @@ import { Action, Store, Reducer } from 'redux';
 import { createStore, applyMiddleware } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension/developmentOnly';
 import thunk from 'redux-thunk';
-// import { default as immutable } from 'redux-immutable-state-invariant';
+import { default as immutable } from 'redux-immutable-state-invariant';
 import { createLogger } from 'redux-logger';
 import { State } from '../types';
 
@@ -21,7 +21,7 @@ const getCommonMiddleware = () => [
 const getDevMiddleware = () => prod
     ? []
     : [
-        // immutable(),
+        immutable(),
         createLogger({
             level: 'info',
             collapsed: true,

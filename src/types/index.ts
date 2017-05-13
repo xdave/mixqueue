@@ -70,7 +70,7 @@ export interface Mix {
 }
 
 export interface Audio {
-    control?: AudioControl;
+    control?: () => AudioControl;
     elementId: string;
     mixes: Mix[];
     activeMixes: Mix[];

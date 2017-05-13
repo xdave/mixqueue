@@ -35,7 +35,7 @@ const styleSheet: React.CSSProperties = {
         width: `${PEAKS_WIDTH}px`,
         height: `${PEAKS_HEIGHT}px`,
         'background-image': ({ activeMixes }: Props) => {
-            const [mix] = activeMixes;
+            const [mix = { files: [], id: '' }] = activeMixes;
             return `url("${getPeaksImage(mix.files, mix.id)}")`;
         },
         backgroundSize: `${PEAKS_WIDTH}px ${PEAKS_HEIGHT}px`,
@@ -44,7 +44,10 @@ const styleSheet: React.CSSProperties = {
     track: {
         display: 'inline-block',
         color: 'white',
-        height: '100%'
+        height: '100%',
+        '&:hover': {
+            'background-color': 'rgba(37, 99, 198, .5) !important'
+        }
     }
 };
 
@@ -82,10 +85,10 @@ const getTrackPosWidth = (track: Track, tracks: Track[], currentTime: number, du
 const setPosFromX = (props: Props & typeof actions) =>
     (e: React.MouseEvent<HTMLDivElement>) => {
         const div = e.currentTarget;
-        const divX = div.getBoundingClientRect().width;
+        const { width } = div.getBoundingClientRect();
 
         const x = e.clientX - 8; // I don't know why '8'... yet.
-        const factor = x / divX;
+        const factor = x / width;
         const time = factor * props.duration;
         props.setCurrentTime(time);
     };
@@ -145,27 +148,8 @@ export default connectWithStyle(styleSheet, mapState, mapActions)(props => (
 
                 <div className="peaks">
                     <div key={`peak-file-${mix.id}`}>
-                        <style>
-                            .peaks-image {`{
-                                background-color: rgb(20,74,160);
-                                width: ${PEAKS_WIDTH}px;
-                                height: ${PEAKS_HEIGHT}px;
-                                background-image: url("${getPeaksImage(mix.files, mix.id)}");
-                                background-size: ${PEAKS_WIDTH}px ${PEAKS_HEIGHT}px;
-                                background-repeat: no-repeat;
-                            }
-                            .peaks-image .track {
-                                display: inline-block;
-                                color: white;
-                                height: 100%;
-                            }
-                            .peaks-image .track:hover {
-                                background-color: rgba(37,99,198,.5) !important;
-                            }`}
-                        </style>
                         <div
                             className={props.classes.peaks}
-                            // style={{ backgroundImage: `url("${getPeaksImage(mix.files, mix.id)}")` }}
                             onClick={setPosFromX(props)}
                         >
                             {props.duration > 0 && mix.cueSheet.tracks.map(track => (
