@@ -180,8 +180,10 @@ export const mixesFetch =
     (): ThunkAction<void, State, void> =>
         async dispatch => {
             dispatch(mixesFetching());
-            const url = encodeURI(`${baseURL}/${searchURL}`);
-            const response = await fetchP(url); // JSON-P needed 'cause no CORS.
+            // const url = encodeURI(`${baseURL}/${searchURL}`);
+            // const response = await fetchP(url); // JSON-P needed 'cause no CORS.
+            const url = './mixes/index.json';
+            const response = await fetch(url);
             const json = await (response.json() as Promise<MixSearchResults>);
             const mixes = json.response.docs.map(doc => ({
                 id: doc.identifier,

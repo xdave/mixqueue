@@ -1,0 +1,31 @@
+{
+    "response": {
+        "docs": [
+            {
+                "identifier": "DaveGradwellFavoritesMixSessionDec312016",
+                "title": "Dave Gradwell - Favorites Mix Session (Dec 31, 2016)",
+                "date": "Dec 31, 2016"
+            },
+            {
+                "identifier": "DaveGradwellMixSessionApril9th2017",
+                "title": "Dave Gradwell - Mix Session (April 9th, 2017)",
+                "date": "April 9, 2017"
+            },
+            {
+                "identifier": "DaveGradwellMixSessionApril16th2017",
+                "title": "Dave Gradwell - Mix Session (April 16th, 2017)",
+                "date": "April 16, 2017"
+            },
+            {
+                "identifier": "DaveGradwellMixSessionApril19th2017",
+                "title": "Dave Gradwell - Mix Session (April 19th, 2017)",
+                "date": "April 19, 2017"
+            },
+            {
+                "identifier": "DaveGradwellMixSessionApril23rd2017",
+                "title": "Dave Gradwell - Mix Session (April 23rd, 2017)",
+                "date": "April 23, 2017"
+            }
+        ]
+    }
+}

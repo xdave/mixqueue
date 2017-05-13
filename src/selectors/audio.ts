@@ -9,10 +9,11 @@ export const getMixes = createSelector(
     audio => audio.mixes
         .slice()
         .map(m => ({ m, d: Date.parse(m.date) }))
-        .sort((a, b) => (a.d < b.d)
-            ? 1
-            : (a.d > b.d)
-                ? -1
-                : 0)
+        .sort((a, b) =>
+            (a.d < b.d)
+                ? 1
+                : (a.d > b.d)
+                    ? -1
+                    : 0)
         .map(o => o.m)
 );
