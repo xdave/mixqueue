@@ -26,6 +26,8 @@ export const mapDispatch = {
 export type Type = React.SFC<TracklistState>;
 
 export const Tracklist: Type = ({ activeMix, activeTrack, ...actions }) => {
+    const isActive = (track: Track) =>
+        activeTrack && activeTrack.number === track.number;
     return (
         <List dense={true}>
             {activeMix && activeMix.cueSheet.tracks.map(track => (
@@ -40,10 +42,12 @@ export const Tracklist: Type = ({ activeMix, activeTrack, ...actions }) => {
                         <MusicNote />
                     </ListItemIcon>
                     <Typography
-                        type={activeTrack && activeTrack.number === track.number ? 'body2' : 'body1'}
+                        type={isActive(track) ? 'body2' : 'body1'}
                         colorInherit
                     >
-                        <code>
+                        <code style={{
+                            fontWeight: isActive(track) ? 'bold' : 'normal'
+                        }}>
                             {zeroPad(track.number)} [{secondsToTime(track.time)}] {track.title}
                         </code>
                     </Typography>
