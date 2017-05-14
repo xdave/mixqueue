@@ -17,3 +17,13 @@ export const getMixes = createSelector(
                     : 0)
         .map(o => o.m)
 );
+
+export const getActiveMix = createSelector(
+    getState,
+    audio => audio.activeMixes[0]
+);
+
+export const getActiveTrack = createSelector(
+    getState,
+    audio => audio.activeTracks[0]
+);

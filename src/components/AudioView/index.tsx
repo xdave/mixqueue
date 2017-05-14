@@ -1,45 +1,54 @@
 import * as React from 'react';
-import { connect } from 'react-redux';
-import { State, Track, Mix } from '../../types';
+import { connectWithStyle } from '../../util/jss';
+import { State } from '../../types';
 import Tracklist from '../Tracklist';
 import Player from "../Player/index";
 import Mixes from "../Mixes/index";
+import { RouteComponentProps } from "react-router";
+import AppBar from "material-ui/AppBar";
+import Toolbar from "material-ui/Toolbar";
+const Grid = require('material-ui/Grid').default;
+const Typography = require("material-ui/Typography").default;
+const Icon = require('material-ui/Icon').default;
+const LibraryMusic = require('material-ui-icons/LibraryMusic').default;
 
-export type Props = {
-    mixes: Mix[];
-    activeMixes: Mix[];
-    activeTracks: Track[]
+const styles: React.CSSProperties = {
+    root: {
+        position: 'relative',
+        marginTop: '82px',
+        width: '100%'
+    },
+    appBar: {
+
+    }
 };
 
-export type AudioViewType = React.SFC<Props>;
-
-export const AudioView: AudioViewType = props => {
-    const {
-        activeMixes,
-        activeTracks
-    } = props;
-
-    return (
-        <div>
-            <Mixes />
-            {activeMixes.map(mix =>
-                <div key={`active-mix-${mix.id}`}>
-                    <Player />
-                    {activeTracks.map(track =>
-                        <p key={`active-track-${mix.id}-${track.title}`}>
-                            {track.number}{' '}{track.title}
-                        </p>
-                    )}
-                    <Tracklist />
-                </div>
-            )}
-        </div>
-    );
-};
-
-export const mapState = (state: State) => ({
-    activeMixes: state.audio.activeMixes,
-    activeTracks: state.audio.activeTracks
+export const mapState = (_: State, props: RouteComponentProps<{}>) => ({
+    ...props
 });
 
-export default connect(mapState)(AudioView);
+export default connectWithStyle(styles, mapState)(props => (
+    <div className={props.classes.root}>
+        <AppBar className={props.classes.appBar}>
+            <Toolbar>
+                <Grid container style={{ alignItems: 'center', }}>
+                    <Grid item>
+                        <Icon>
+                            <LibraryMusic />
+                        </Icon>
+                    </Grid>
+                    <Grid item>
+                        <Typography type="title" colorInherit>
+                            MixQueue
+                            </Typography>
+                    </Grid>
+                    <Grid item style={{ marginLeft: 'auto' }}>
+                        <Mixes />
+                    </Grid>
+                </Grid>
+            </Toolbar>
+        </AppBar>
+        <Player />
+        <Tracklist />
+    </div>
+));

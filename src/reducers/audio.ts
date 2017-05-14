@@ -11,7 +11,10 @@ const initial: Audio = {
     playing: false,
     duration: 0,
     seeking: false,
-    waiting: false
+    waiting: false,
+    selectingPos: false,
+    posSelectX: 0,
+    mixMenuVisible: false
 };
 
 export const audio = (state = initial, action: actions.AudioAction): Audio => {
@@ -35,6 +38,21 @@ export const audio = (state = initial, action: actions.AudioAction): Audio => {
             return {
                 ...state,
                 seeking: false
+            };
+        case 'AUDIO_SET_SELECTING_POS':
+            return {
+                ...state,
+                selectingPos: action.selectingPos
+            };
+        case 'AUDIO_SET_POSITION_SELECTION_X':
+            return {
+                ...state,
+                posSelectX: action.posSelectX,
+            };
+        case 'AUDIO_MIX_MENU_VISIBLE':
+            return {
+                ...state,
+                mixMenuVisible: action.mixMenuVisible
             };
         case 'AUDIO_SET_ACTIVE_MIX':
             return {

@@ -1,11 +1,11 @@
 declare module 'react-jss' {
-    import { ComponentClass, CSSProperties, SFC } from 'react';
+    import { ComponentClass, SFC } from 'react';
     import { JSS } from 'jss';
 
     type Component<P> = ComponentClass<P> | SFC<P>;
 
     export interface SheetDef {
-        [className: string]: CSSProperties;
+        [className: string]: any;
     }
 
     export type Classes<CSS>

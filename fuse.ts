@@ -3,7 +3,7 @@ import {
     FuseBox,
     EnvPlugin,
     JSONPlugin,
-    SourceMapPlainJsPlugin,
+    // SourceMapPlainJsPlugin,
     UglifyJSPlugin,
     WebIndexPlugin
 } from 'fuse-box';
@@ -38,7 +38,7 @@ const fuse = FuseBox.init({
     output,
     log: !(watch && tests),
     cache: !prod,
-    sourceMaps: !prod,
+    sourceMaps: { project: !prod, vendors: !prod },
     alias: {
         './asap': 'asap/browser-asap',
         './asap.js': 'asap/browser-asap',
@@ -56,7 +56,6 @@ const fuse = FuseBox.init({
             path: prod ? '/mixqueue' : undefined
         }),
         JSONPlugin(),
-        SourceMapPlainJsPlugin(),
         tests && new MochaRunner(mochaGlob, mochaOptions, mochaBundles),
         prod && UglifyJSPlugin({
             mangle: {

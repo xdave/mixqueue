@@ -1,44 +1,67 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Mix, State } from "../../types/index";
-import { getMixes } from "../../selectors/audio";
+import { getMixes, getActiveMix } from "../../selectors/audio";
 import * as audioActions from '../../actions/audio';
+import { Dispatch } from "redux";
+import { bindActionCreators } from "redux";
+import Button from 'material-ui/Button';
+import { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
+import Drawer from "material-ui/Drawer";
 
-const Button = require('material-ui/Button').default;
-
-interface Props {
-    mixes: Mix[];
-    activeMixes: Mix[];
-}
+const QueueMusic = require('material-ui-icons/QueueMusic').default;
 
 const mapState = (state: State) => ({
     mixes: getMixes(state),
-    activeMixes: state.audio.activeMixes
+    activeMix: getActiveMix(state),
+    mixMenuVisible: state.audio.mixMenuVisible
 });
 
-const mapDispatch = { ...audioActions };
+const mapDispatch = (dispatch: Dispatch<audioActions.AudioAction>) =>
+    bindActionCreators({ ...audioActions }, dispatch);
 
-type Type = React.SFC<Props & typeof audioActions>;
-export const Mixes: Type = ({ mixes, activeMixes, ...props }) => (
-    <ul>
-        {mixes.map(mix =>
-            <li key={`mix-selection-${mix.id}`}>
-                <Button
-                    raised={!!activeMixes.find(m => m.id === mix.id)}
-                    onClick={async (e: any) => {
-                        e.preventDefault();
-                        const fetchedMix: Mix = await props.mixFetch(mix.id) as any;
-                        props.setActiveMix(fetchedMix);
-                        props.setActiveTrack(fetchedMix.cueSheet.tracks[0]);
-                        props.setSource(fetchedMix.sources[0]);
-                        return false;
-                    }}
-                >
-                    {mix.title}
-                </Button>
-            </li>
-        )}
-    </ul>
-);
+const C = connect(mapState, mapDispatch);
 
-export default connect(mapState, mapDispatch)(Mixes);
+export default C(({ mixes, activeMix, mixMenuVisible, ...props }) => {
+    return (
+        <div>
+            <Button
+                aria-controls="mix-menu"
+                aria-haspopup="true"
+                onClick={() => props.setMixMenuVisible(true)}
+                primary
+                raised
+            >
+                {activeMix && activeMix.title || 'Select a mix...'}
+            </Button>
+            <Drawer
+                anchor="right"
+                open={mixMenuVisible}
+                onRequestClose={() => props.setMixMenuVisible(false)}
+            >
+                <div>
+                    {mixes.map(mix => (
+                        <ListItem
+                            key={`mix-selection-${mix.id}`}
+                            button
+                            onClick={async (e: any) => {
+                                e.preventDefault();
+                                const fetchedMix: Mix = await props.mixFetch(mix.id) as any;
+                                props.setMixMenuVisible(false);
+                                props.setActiveMix(fetchedMix);
+                                props.setActiveTrack(fetchedMix.cueSheet.tracks[0]);
+                                props.setSource(fetchedMix.sources[0]);
+                                return false;
+                            }}
+                        >
+                            <ListItemIcon>
+                                <QueueMusic />
+                            </ListItemIcon>
+                            <ListItemText primary={mix.title} />
+                        </ListItem>
+                    ))}
+                </div>
+            </Drawer>
+        </div>
+    );
+});

@@ -1,4 +1,5 @@
 import { AudioControl } from "../util/audio";
+import { RouterState } from "react-router-redux";
 
 export interface MixFile {
     name: string;
@@ -80,8 +81,12 @@ export interface Audio {
     duration: number;
     seeking: boolean;
     waiting: boolean;
+    selectingPos: boolean;
+    posSelectX: number;
+    mixMenuVisible: boolean;
 }
 
 export interface State {
     audio: Audio;
+    router: RouterState;
 }

@@ -16,7 +16,10 @@ export type AudioAction
     | { type: 'AUDIO_SET_DURATION_DONE', duration: number }
     | { type: 'AUDIO_SEEK_START' }
     | { type: 'AUDIO_SEEK_END', position: number }
+    | { type: 'AUDIO_SET_SELECTING_POS', selectingPos: boolean }
+    | { type: 'AUDIO_SET_POSITION_SELECTION_X', posSelectX: number }
     | { type: 'AUDIO_SET_SOURCE_DONE', source: string }
+    | { type: 'AUDIO_MIX_MENU_VISIBLE', mixMenuVisible: boolean }
     | { type: 'AUDIO_SET_ACTIVE_MIX', mix: Mix }
     | { type: 'AUDIO_SET_ACTIVE_TRACK', track: Track }
     | { type: 'AUDIO_SET_CURRENT_TIME_DONE', currentTime: number }
@@ -46,9 +49,24 @@ export const seekEnd = (position: number): AudioAction => ({
     position
 });
 
+export const setSelectingPos = (selectingPos: boolean): AudioAction => ({
+    type: 'AUDIO_SET_SELECTING_POS',
+    selectingPos
+});
+
+export const setPosSelectionX = (posSelectX: number): AudioAction => ({
+    type: 'AUDIO_SET_POSITION_SELECTION_X',
+    posSelectX
+});
+
 export const setSourceDone = (source: string): AudioAction => ({
     type: 'AUDIO_SET_SOURCE_DONE',
     source
+});
+
+export const setMixMenuVisible = (mixMenuVisible: boolean): AudioAction => ({
+    type: 'AUDIO_MIX_MENU_VISIBLE',
+    mixMenuVisible
 });
 
 export const setActiveMix = (mix: Mix): AudioAction => ({

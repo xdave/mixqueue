@@ -1,5 +1,7 @@
 import { Action, Store, Reducer } from 'redux';
 import { createStore, applyMiddleware } from 'redux';
+import createHistory from 'history/createHashHistory';
+import { routerMiddleware } from 'react-router-redux';
 import { composeWithDevTools } from 'redux-devtools-extension/developmentOnly';
 import thunk from 'redux-thunk';
 import { default as immutable } from 'redux-immutable-state-invariant';
@@ -12,10 +14,13 @@ declare const window: {
     __REDUX_STORE__: Store<State>;
 } & Window;
 
+export const history = createHistory();
+
 const composeEnhancers = composeWithDevTools({});
 
 const getCommonMiddleware = () => [
-    thunk
+    thunk,
+    routerMiddleware(history)
 ];
 
 const getDevMiddleware = () => prod
@@ -26,8 +31,11 @@ const getDevMiddleware = () => prod
             level: 'info',
             collapsed: true,
             diff: true,
-            predicate: (_, action: Action) =>
-                action.type !== 'AUDIO_SET_CURRENT_TIME_DONE'
+            predicate: (_, action: Action) => !([
+                'AUDIO_SET_CURRENT_TIME_DONE',
+                'AUDIO_SET_SELECTING_POS',
+                'AUDIO_SET_POSITION_SELECTION_X'
+            ].some(t => action.type === t))
         }),
     ];
 

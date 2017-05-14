@@ -6,31 +6,29 @@ import { State } from "../types/index";
 declare const window: {
     webkitAudioContext: AudioContext;
     AudioContext: AudioContext;
-    __AUDIO_CONTEXT__: AudioContext;
-    __AUDIO__: HTMLAudioElement;
 } & Window;
 
 window.AudioContext = window.AudioContext || window.webkitAudioContext;
 
-export const getAudio = () => {
-    return {
-        context: window.__AUDIO_CONTEXT__
-            ? window.__AUDIO_CONTEXT__
-            : window.__AUDIO_CONTEXT__ = new AudioContext(),
-        element: window.__AUDIO__
-            ? window.__AUDIO__
-            : window.__AUDIO__ = new Audio(),
-    };
+interface AudioController {
+    context: AudioContext;
+    element: HTMLAudioElement;
+    source?: MediaElementAudioSourceNode;
+}
+
+export const createGetAudio = () => {
+    const ctx = new AudioContext();
+    const audio = new Audio();
+    return () => ({
+        context: ctx,
+        element: audio
+    });
 };
 
 export class AudioControl {
     actions: typeof audioActions;
-    audio: {
-        context: AudioContext;
-        element: HTMLAudioElement;
-        source?: MediaElementAudioSourceNode;
-    };
-    constructor(public store: Store<State>) {
+    audio: AudioController;
+    constructor(public store: Store<State>, getAudio: () => AudioController) {
         this.audio = getAudio();
         this.audio.element.crossOrigin = 'anonymous';
         this.audio.element.autoplay = true;
@@ -114,4 +112,5 @@ export class AudioControl {
     };
 }
 
-export default (store: Store<State>) => new AudioControl(store);
+export default (store: Store<State>, getAudio: () => AudioController) =>
+    new AudioControl(store, getAudio);
