@@ -1,8 +1,19 @@
 import { State } from '../types';
 import { createSelector } from 'reselect';
+import { secondsToTime2 } from "../util/player";
 
 export const getState = (state: State) => state.audio;
 export const getCurrentTime = (state: State) => state.audio.currentTime;
+
+export const getPrettyTime = createSelector(
+    getCurrentTime,
+    time => secondsToTime2(time)
+);
+
+export const getPrettyDuration = createSelector(
+    getState,
+    audio => secondsToTime2(audio.duration)
+);
 
 export const getMixes = createSelector(
     getState,

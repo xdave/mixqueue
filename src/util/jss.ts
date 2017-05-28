@@ -1,51 +1,56 @@
 import {
-    connect,
+    connect as reduxConnect,
     Component,
+    ComponentClass,
     MapStateToPropsParam,
     MapDispatchToPropsParam
 } from 'react-redux';
 import { create as createJss } from 'jss';
 import { create as createInjectSheet, Sheet, SheetDef } from 'react-jss';
-import nested from 'jss-nested';
-import compose from 'jss-compose';
-import camelCase from 'jss-camel-case';
-import vendorPrefixer from 'jss-vendor-prefixer';
+import presetDefault from 'jss-preset-default';
+import { withStyles } from "material-ui/styles";
 
-// JSS Plugin Required Order
-// jss - cache
-// jss - global
-// jss - extend
-// jss - nested
-// jss - compose
-// jss - camel -case
-// jss - default-unit
-// jss - expand
-// jss - vendor - prefixer
-// jss - props - sort
-// jss - isolate
+export const important = <CSS extends SheetDef>(css: CSS): CSS => {
+    return Object.assign({}, ...Object.keys(css).map(className => {
+        const styles = css[className];
+        return {
+            [className]: Object.assign({}, ...Object.keys(styles).map(style => {
+                const rule = styles[style];
+                if (typeof rule === 'string') {
+                    return { [style]: `${rule} !important` };
+                } else if (typeof rule === 'function') {
+                    return {
+                        [style]: (props: any) => `${rule(props)} !important`
+                    };
+                }
+                return { [style]: rule };
+            }))
+        };
+    }));
+};
 
-const jss = createJss();
-jss.use(nested());
-jss.use(compose());
-jss.use(camelCase());
-jss.use(vendorPrefixer());
-
-export type StyledSFC<CSS extends SheetDef, Props = {}, Dispatch = {}>
-    = React.SFC<Props & Dispatch & Sheet<CSS>>;
+const jss = createJss(presetDefault());
 
 export const injectSheet = createInjectSheet(jss);
 
-export const connectWithStyle = <CSS extends SheetDef, State, Actions, Props>(
-    css: CSS,
-    state?: MapStateToPropsParam<State, Props> | null,
-    actions?: MapDispatchToPropsParam<Actions, Props> | null) =>
-    (component: Component<State & Actions & Props & Sheet<CSS>>) =>
-        (state && !actions)
-            ? connect(state)(injectSheet(css)(component))
-            : (!state && actions)
-                ? connect(null, actions)(injectSheet(css)(component))
-                : (state && actions)
-                    ? connect(state, actions)(injectSheet(css)(component))
-                    : injectSheet(css)<State & Actions & Props>(component);
+type StyleInjector = typeof injectSheet | typeof withStyles;
+
+export const createConnector = (injector: StyleInjector) =>
+    <CSS extends SheetDef, S, A, P>(
+        css: CSS,
+        state?: MapStateToPropsParam<S, P>,
+        actions?: MapDispatchToPropsParam<A, P>) =>
+        (component: Component<S & A & P & Sheet<CSS>>): ComponentClass<P> =>
+            (reduxConnect as any)(state, actions)(
+                injector(important(css))(component));
+
+export const connectWithStyle = createConnector(injectSheet);
+export const connectMui = createConnector(withStyles);
+
+export const injectCSS = <CSS extends SheetDef>(css: CSS) =>
+    <P>(component: Component<Sheet<CSS> & P>): Component<P> =>
+        injectSheet(css)(component);
+
+export { connectWithStyle as connect };
 
 export default connectWithStyle;

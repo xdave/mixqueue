@@ -17,12 +17,11 @@ interface AudioController {
 }
 
 export const createGetAudio = () => {
-    const ctx = new AudioContext();
-    const audio = new Audio();
-    return () => ({
-        context: ctx,
-        element: audio
-    });
+    const context = new AudioContext();
+    const element = new Audio();
+    element.crossOrigin = 'anonymous';
+
+    return () => ({ context, element });
 };
 
 export class AudioControl {
@@ -33,29 +32,16 @@ export class AudioControl {
         this.audio.element.crossOrigin = 'anonymous';
         this.audio.element.autoplay = true;
 
-        window.removeEventListener('load', this.onLoad);
-        window.addEventListener('load', this.onLoad);
-
         this.actions = bindActionCreators({
             ...audioActions
         }, store.dispatch.bind(store));
 
-        this.audio.element.removeEventListener('timeupdate', this.timeUpdate);
+        window.addEventListener('load', this.onLoad);
         this.audio.element.addEventListener('timeupdate', this.timeUpdate);
-
-        this.audio.element.removeEventListener('playing', this.onPlaying);
         this.audio.element.addEventListener('playing', this.onPlaying);
-
-        this.audio.element.removeEventListener('waiting', this.onWaiting);
         this.audio.element.addEventListener('waiting', this.onWaiting);
-
-        this.audio.element.removeEventListener('play', this.onPlay);
         this.audio.element.addEventListener('play', this.onPlay);
-
-        this.audio.element.removeEventListener('pause', this.onPause);
         this.audio.element.addEventListener('pause', this.onPause);
-
-        this.audio.element.removeEventListener('loadedmetadata', this.onDurationChange);
         this.audio.element.addEventListener('loadedmetadata', this.onDurationChange);
     }
 
@@ -69,8 +55,14 @@ export class AudioControl {
     };
 
     setSourceUrl = (url: string) => {
-        this.audio.element.crossOrigin = 'anonymous';
-        this.audio.element.src = url;
+        if (url) {
+            const src = encodeURI(url);
+            if (this.audio.element.src != src) {
+                this.audio.element.src = src;
+                return true;
+            }
+        }
+        return false;
     };
 
     play = () => {

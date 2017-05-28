@@ -1,10 +1,10 @@
 declare module 'jss' {
     export type Middleware = any;
+	export type Preset = any;
 
     export interface JSS {
         use(middleware: Middleware): void;
-        createStyleSheet<T>(style: T): T;
-    }
 
-    export function create(): JSS;
+    }
+    export function create(preset?: Preset): JSS;
 }

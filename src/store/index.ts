@@ -33,8 +33,8 @@ const getDevMiddleware = () => prod
             diff: true,
             predicate: (_, action: Action) => !([
                 'AUDIO_SET_CURRENT_TIME_DONE',
-                'AUDIO_SET_SELECTING_POS',
-                'AUDIO_SET_POSITION_SELECTION_X'
+                'UI_SET_SELECTING_POS',
+                'UI_SET_POSITION_SELECTION_X'
             ].some(t => action.type === t))
         }),
     ];

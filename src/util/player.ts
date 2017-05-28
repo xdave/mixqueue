@@ -8,26 +8,38 @@ export const getAudioSources = (files: MixFile[], mixId: string) =>
         .sort(a => (/ogg/i).test(a.format) ? -1 : 1)
         .map(f => `https://archive.org/download/${mixId}/${f.name}`);
 
+export const getAudioSources2 = (files: MixFile[], mixId: string) =>
+    files
+        .filter(f => [/ogg/i, /mp3/i].some(r => r.test(f.format)))
+        .slice()
+        .sort(a => (/ogg/i).test(a.format) ? -1 : 1)
+        .map(f => `https://archive.org/download/${mixId}/${f.name}`);
+
 export const getPeaksImage = (files: MixFile[], mixId: string) =>
     files
         .filter(f => /png/i.test(f.format))
         .map(f => `https://archive.org/download/${mixId}/${f.name}`)[0]
         || '';
 
-export const getXFromPos = (el: HTMLElement, currentTime: number, duration: number) => {
+export const getXFromPos = (el: HTMLElement | null, time: number, duration: number) => {
     if (el) {
         const { width } = el.getBoundingClientRect();
-        return `${currentTime / duration * (width - 1)}px`;
+        return `${time / duration * (width - 1)}px`;
     }
     return '0px';
 };
 
-export const setPosFromX = (duration: number, setTime: typeof audioActions.setCurrentTime) =>
-    (e: React.MouseEvent<HTMLDivElement>) => {
-        const div = e.currentTarget;
-        const { width } = div.getBoundingClientRect();
+export const qXFromPos = (selector: string, time: number, duration: number) => {
+    const el = document.querySelector(selector) as HTMLElement;
+    return getXFromPos(el, time, duration);
+};
 
-        const x = e.clientX - div.getBoundingClientRect().left;
+export const setPosFromX = (duration: number, setTime: typeof audioActions.setCurrentTime) =>
+    (event: React.MouseEvent<HTMLDivElement>) => {
+        const div = event.currentTarget;
+        const { left, width } = div.getBoundingClientRect();
+
+        const x = event.clientX - left;
         const factor = x / width;
         const time = factor * duration;
         setTime(time);
@@ -50,6 +62,10 @@ export const secondsToTime = (totalSeconds: number) => {
     const secsStr = (secs < 10 ? `0${secsFixed}` : secsFixed);
     return `${hrsStr}:${minsStr}:${secsStr}`;
 };
+
+export const secondsToTime2 = (totalSeconds: number) =>
+    secondsToTime(totalSeconds).replace(/\.[0-9]*$/, '');
+
 
 export const zeroPad = (num: number) =>
     num < 10 ? '0' + num : num;

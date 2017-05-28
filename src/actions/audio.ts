@@ -4,6 +4,7 @@ import { ThunkAction } from 'redux-thunk'
 import { State, Mix, MixInfo, MixSearchResults, MixFile, Track } from '../types';
 import { AudioControl } from "../util/audio";
 import { getAudioSources } from "../util/player";
+import { getType } from "../util/fileType";
 
 const baseURL = 'https://archive.org';
 const searchPage = 'advancedsearch.php';
@@ -135,7 +136,7 @@ export const seek =
 export const skipPrevious =
     (): ThunkAction<void, State, void> =>
         (dispatch, getState) => {
-            const { activeMixes, activeTracks} = getState().audio;
+            const { activeMixes, activeTracks } = getState().audio;
             const [mix] = activeMixes;
             const [active] = activeTracks;
             const { tracks } = mix.cueSheet;
@@ -166,9 +167,9 @@ export const setPlaying =
             const { control } = getState().audio;
             if (control) {
                 if (play) {
-                    await control().play();
+                    return await control().play();
                 } else {
-                    await control().pause();
+                    return await control().pause();
                 }
             }
         };
@@ -183,39 +184,33 @@ export const setStop =
         };
 
 export const setSource =
-    (source: string): ThunkAction<void, State, void> =>
+    (sources: string[]): ThunkAction<void, State, void> =>
         (dispatch, getState) => {
             const { control } = getState().audio;
             if (control) {
-                control().setSourceUrl(source);
-                dispatch(setSourceDone(source));
+                const { element } = control().audio;
+                const source = sources.reduce((acc, cur) => {
+                    const canPlay = element.canPlayType(getType(acc));
+                    return ((canPlay && canPlay.length > 0) ? acc : cur);
+                }, '');
+
+                if (control().setSourceUrl(source)) {
+                    dispatch(setSourceDone(source));
+                }
             }
         };
 
 export const setCurrentTime =
     (time: number): ThunkAction<void, State, void> =>
         (dispatch, getState) => {
-            const { activeMixes, activeTracks, control } = getState().audio;
+            const { control } = getState().audio;
 
             if (control && control().audio.element.currentTime != time) {
                 control().audio.element.currentTime = time;
                 return;
             }
-
-            dispatch(setCurrentTimeDone(time));
-
-            const [activeMix] = activeMixes;
-            const [activeTrack] = activeTracks;
-            const { tracks } = activeMix.cueSheet;
-
-            const track = tracks.reduce((prev, cur) => {
-                return (time >= prev.time && time < cur.time)
-                    ? prev
-                    : cur
-            });
-
-            if (activeTrack.title !== track.title) {
-                dispatch(setActiveTrack(track))
+            if (!getState().audio.seeking) {
+                dispatch(setCurrentTimeDone(time));
             }
         }
 
@@ -279,7 +274,7 @@ export const mixFetch = (id: string): ThunkAction<void, State, void> =>
             ...mix,
             files: json.files,
             cueSheet: json[id],
-            sources: getAudioSources(json.files, mix.id)
+            sources: getAudioSources(json.files, id)
         };
         dispatch(mixFetched(completeMix));
         return completeMix;

@@ -18,6 +18,6 @@ declare module 'react-jss' {
 
     export function create(jss: JSS):
         <CSS extends SheetDef>(css: CSS) =>
-            <P>(component: Component<P & Sheet<CSS>>) =>
-                ComponentClass<P>;
+            <P extends any>(component: Component<P>) =>
+                Component<P>;
 }

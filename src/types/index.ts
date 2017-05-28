@@ -1,5 +1,6 @@
 import { AudioControl } from "../util/audio";
 import { RouterState } from "react-router-redux";
+import { ThunkAction } from "redux-thunk";
 
 export interface MixFile {
     name: string;
@@ -31,19 +32,28 @@ export interface MixMetadata {
     year: string;
 }
 
+export interface MixSearchResult {
+    creator: string;
+    date: string;
+    description: string;
+    downloads: number;
+    identifier: string;
+    mediatype: string;
+    subject: string;
+    title: string;
+}
+
 export interface MixSearchResults {
     response: {
-        docs: {
-            identifier: string;
-            title: string;
-            date: string;
-        }[]
+        docs: MixSearchResult[]
     }
 }
 
 export type MixInfo = {
     files: MixFile[];
-    metadata: MixMetadata
+    metadata: MixMetadata;
+    server: string;
+    dir: string;
 } & {
     [id: string]: CueSheet;
 }
@@ -86,7 +96,23 @@ export interface Audio {
     mixMenuVisible: boolean;
 }
 
+export interface Archive {
+    searchResults: MixSearchResult[];
+    mixes: MixInfo[];
+}
+
+export interface UI {
+    mixId: string;
+    mixListVisible: boolean;
+    selectingPos: boolean;
+    posSelectX: number;
+}
+
 export interface State {
     audio: Audio;
+    archive: Archive;
     router: RouterState;
+    ui: UI;
 }
+
+export type Thunk = ThunkAction<void, State, void>;

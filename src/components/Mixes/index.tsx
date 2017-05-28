@@ -50,7 +50,7 @@ export default C(({ mixes, activeMix, mixMenuVisible, ...props }) => {
                                 props.setMixMenuVisible(false);
                                 props.setActiveMix(fetchedMix);
                                 props.setActiveTrack(fetchedMix.cueSheet.tracks[0]);
-                                props.setSource(fetchedMix.sources[0]);
+                                props.setSource(fetchedMix.sources);
                                 return false;
                             }}
                         >

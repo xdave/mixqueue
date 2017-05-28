@@ -3,7 +3,7 @@ import {
     FuseBox,
     EnvPlugin,
     JSONPlugin,
-    // SourceMapPlainJsPlugin,
+    SVGPlugin,
     UglifyJSPlugin,
     WebIndexPlugin
 } from 'fuse-box';
@@ -40,10 +40,6 @@ const fuse = FuseBox.init({
     cache: !prod,
     sourceMaps: { project: !prod, vendors: !prod },
     alias: {
-        './asap': 'asap/browser-asap',
-        './asap.js': 'asap/browser-asap',
-        './raw': 'asap/browser-raw',
-        './raw.js': 'asap/browser-raw',
         'react': 'preact-compat',
         'react-dom': 'preact-compat',
         'react-tap-event-plugin': 'preact-tap-event-plugin'
@@ -56,18 +52,20 @@ const fuse = FuseBox.init({
             path: prod ? '/mixqueue' : undefined
         }),
         JSONPlugin(),
+        SVGPlugin(),
         tests && new MochaRunner(mochaGlob, mochaOptions, mochaBundles),
-        prod && UglifyJSPlugin({
+        prod && UglifyJSPlugin(/*{
             mangle: {
                 toplevel: true,
                 screw_ie8: true
             }
-        })
+        }*/)
     ]
 });
 
 apps
     .map(app => fuse.bundle(app.name)
+        .target('browser')
         .cache(!prod)
         .log(!(watch && tests))
         .instructions(app.instructions))
