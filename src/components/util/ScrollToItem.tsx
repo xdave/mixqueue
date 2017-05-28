@@ -20,11 +20,11 @@ export default class ScrollToItem extends React.Component<Props, {}> {
 	shouldScroll: boolean;
 
 	resize = () => {
-		this.forceUpdate();
 		if (this.props.setHeight) {
 			const el = findDOMNode(this) as HTMLElement;
 			el.style.height = this.props.setHeight();
 		}
+		this.forceUpdate();
 	}
 
 	componentDidMount() {
@@ -44,11 +44,11 @@ export default class ScrollToItem extends React.Component<Props, {}> {
 		}
 	}
 	componentDidUpdate() {
-		if (this.props.setHeight) {
-			const el = findDOMNode(this) as HTMLElement;
-			el.style.height = this.props.setHeight();
-		}
 		if (this.shouldScroll) {
+			if (this.props.setHeight) {
+				const el = findDOMNode(this) as HTMLElement;
+				el.style.height = this.props.setHeight();
+			}
 			const selector = `.${this.props.itemSelector}`;
 			const el = findDOMNode(this) as HTMLDivElement;
 			const item = el.querySelector(selector) as HTMLElement;
@@ -66,6 +66,7 @@ export default class ScrollToItem extends React.Component<Props, {}> {
 		const { style = {}, children, id, className } = this.props;
 		const scrollStyle = {
 			overflowY: 'scroll',
+			height: this.props.setHeight && this.props.setHeight()
 			...style
 		};
 		return (
