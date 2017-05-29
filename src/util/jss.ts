@@ -48,8 +48,8 @@ export const connectWithStyle = createConnector(injectSheet);
 export const connectMui = createConnector(withStyles);
 
 export const injectCSS = <CSS extends SheetDef>(css: CSS) =>
-    <P>(component: Component<Sheet<CSS> & P>): Component<P> =>
-        injectSheet(css)(component);
+    <P>(component: Component<Sheet<CSS> & P>): ComponentClass<P> =>
+        injectSheet(important(css))(component);
 
 export { connectWithStyle as connect };
 

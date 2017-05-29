@@ -3,21 +3,14 @@ import * as actions from '../actions/audio';
 
 const initial: Audio = {
     control: undefined,
-    elementId: 'audioElement',
-    mixes: [],
-    activeMixes: [],
-    activeTracks: [],
     currentTime: 0,
     playing: false,
     duration: 0,
     seeking: false,
-    waiting: false,
-    selectingPos: false,
-    posSelectX: 0,
-    mixMenuVisible: false
+    waiting: false
 };
 
-export const audio = (state = initial, action: actions.AudioAction): Audio => {
+export const audio = (state = initial, action: actions.AudioAction) => {
     switch (action.type) {
         case 'AUDIO_SET_CONTROL':
             return {
@@ -39,31 +32,6 @@ export const audio = (state = initial, action: actions.AudioAction): Audio => {
                 ...state,
                 seeking: false
             };
-        case 'AUDIO_SET_SELECTING_POS':
-            return {
-                ...state,
-                selectingPos: action.selectingPos
-            };
-        case 'AUDIO_SET_POSITION_SELECTION_X':
-            return {
-                ...state,
-                posSelectX: action.posSelectX,
-            };
-        case 'AUDIO_MIX_MENU_VISIBLE':
-            return {
-                ...state,
-                mixMenuVisible: action.mixMenuVisible
-            };
-        case 'AUDIO_SET_ACTIVE_MIX':
-            return {
-                ...state,
-                activeMixes: [action.mix]
-            };
-        case 'AUDIO_SET_ACTIVE_TRACK':
-            return {
-                ...state,
-                activeTracks: [action.track]
-            };
         case 'AUDIO_SET_CURRENT_TIME_DONE':
             return {
                 ...state,
@@ -79,22 +47,6 @@ export const audio = (state = initial, action: actions.AudioAction): Audio => {
                 ...state,
                 waiting: action.waiting
             };
-        case 'AUDIO_MIXES_FETCHING':
-            return state; // TODO: fetching flag
-        case 'AUDIO_MIXES_FETCHED':
-            return {
-                ...state,
-                mixes: action.mixes
-            };
-        case 'AUDIO_MIX_FETCHING':
-            return state; // TODO: fetching flag
-        case 'AUDIO_MIX_FETCHED': {
-            const { mix } = action;
-            return {
-                ...state,
-                mixes: state.mixes.map(m => m.id === mix.id ? mix : m),
-            };
-        }
         default:
             return state;
     }

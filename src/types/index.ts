@@ -71,29 +71,22 @@ export interface CueSheet {
     tracks: Track[]
 }
 
-export interface Mix {
-    id: string;
-    title: string;
-    date: string;
-    files: MixFile[];
-    cueSheet: CueSheet;
-    sources: string[];
-}
+// export interface Mix {
+//     id: string;
+//     title: string;
+//     date: string;
+//     files: MixFile[];
+//     cueSheet: CueSheet;
+//     sources: string[];
+// }
 
 export interface Audio {
     control?: () => AudioControl;
-    elementId: string;
-    mixes: Mix[];
-    activeMixes: Mix[];
-    activeTracks: Track[];
     currentTime: number;
     playing: boolean;
     duration: number;
     seeking: boolean;
     waiting: boolean;
-    selectingPos: boolean;
-    posSelectX: number;
-    mixMenuVisible: boolean;
 }
 
 export interface Archive {
@@ -105,6 +98,7 @@ export interface UI {
     mixId: string;
     mixListVisible: boolean;
     selectingPos: boolean;
+    posSelectTime: number;
     posSelectX: number;
 }
 

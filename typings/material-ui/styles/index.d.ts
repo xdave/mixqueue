@@ -15,8 +15,8 @@ declare module 'material-ui/styles' {
 
     export interface WithStyles {
         <CSS extends SheetDef>(css: CSS):
-            <P extends any>(component: Component<P>) =>
-                Component<P>;
+            <P extends {}>(component: Component<Sheet<CSS> & P>) =>
+                ComponentClass<P>;
     }
 
     export const createStyleSheet: CreateStyleSheet;

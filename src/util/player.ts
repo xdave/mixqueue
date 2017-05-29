@@ -19,7 +19,7 @@ export const getPeaksImage = (files: MixFile[], mixId: string) =>
     files
         .filter(f => /png/i.test(f.format))
         .map(f => `https://archive.org/download/${mixId}/${f.name}`)[0]
-        || '';
+    || '';
 
 export const getXFromPos = (el: HTMLElement | null, time: number, duration: number) => {
     if (el) {
@@ -34,15 +34,18 @@ export const qXFromPos = (selector: string, time: number, duration: number) => {
     return getXFromPos(el, time, duration);
 };
 
+export const getTimeFromX = (event: React.MouseEvent<HTMLDivElement>, duration: number) => {
+    const div = event.currentTarget;
+    const { left, width } = div.getBoundingClientRect();
+
+    const x = event.clientX - left;
+    const factor = x / width;
+    return factor * duration;
+}
+
 export const setPosFromX = (duration: number, setTime: typeof audioActions.setCurrentTime) =>
     (event: React.MouseEvent<HTMLDivElement>) => {
-        const div = event.currentTarget;
-        const { left, width } = div.getBoundingClientRect();
-
-        const x = event.clientX - left;
-        const factor = x / width;
-        const time = factor * duration;
-        setTime(time);
+        setTime(getTimeFromX(event, duration));
     };
 
 export const getTrackLen = (track: Track, tracks: Track[], duration: number) => {

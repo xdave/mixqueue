@@ -5,6 +5,7 @@ export const initial: UI = {
     mixId: '',
     mixListVisible: false,
     selectingPos: false,
+    posSelectTime: 0,
     posSelectX: 0
 };
 
@@ -21,6 +22,11 @@ export const ui = (state = initial, action: Type) => {
             return {
                 ...state,
                 selectingPos: action.selectingPos
+            };
+        case 'UI_SET_POSITION_SELECTION_TIME':
+            return {
+                ...state,
+                posSelectTime: action.posSelectTime
             };
         case 'UI_SET_POSITION_SELECTION_X':
             return {
