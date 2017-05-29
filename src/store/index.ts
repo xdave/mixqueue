@@ -1,11 +1,8 @@
-import { Action, Store, Reducer } from 'redux';
+import { compose, Action, Store, Reducer } from 'redux';
 import { createStore, applyMiddleware } from 'redux';
 import createHistory from 'history/createHashHistory';
 import { routerMiddleware } from 'react-router-redux';
-import { composeWithDevTools } from 'redux-devtools-extension/developmentOnly';
 import thunk from 'redux-thunk';
-import { default as immutable } from 'redux-immutable-state-invariant';
-import { createLogger } from 'redux-logger';
 import { State } from '../types';
 
 const prod = process.env.NODE_ENV === 'production';
@@ -16,7 +13,11 @@ declare const window: {
 
 export const history = createHistory();
 
-const composeEnhancers = composeWithDevTools({});
+const r = require;
+
+const composeEnhancers: typeof compose = !prod
+    ? r('redux-devtools-extension').composeWithDevTools({})
+    : compose;
 
 const getCommonMiddleware = () => [
     thunk,
@@ -26,14 +27,15 @@ const getCommonMiddleware = () => [
 const getDevMiddleware = () => prod
     ? []
     : [
-        immutable(),
-        createLogger({
+        r('redux-immutable-state-invariant').default(),
+        r('redux-logger').createLogger({
             level: 'info',
             collapsed: true,
             diff: true,
-            predicate: (_, action: Action) => !([
+            predicate: (_: State, action: Action) => !([
                 'AUDIO_SET_CURRENT_TIME_DONE',
                 'UI_SET_SELECTING_POS',
+                'UI_SET_POSITION_SELECTION_TIME',
                 'UI_SET_POSITION_SELECTION_X'
             ].some(t => action.type === t))
         }),

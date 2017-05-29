@@ -25,7 +25,14 @@ const template = path.join(homeDir, 'index.html');
 const apps = [
     {
         name: 'app',
-        instructions: '> index.tsx'
+        instructions: `
+            > index.tsx
+            ${!prod ? `
+                + redux-logger
+                + redux-immutable-state-invariant
+                + redux-devtools-extension
+            ` : ''}
+        `
     }
 ];
 
@@ -54,12 +61,12 @@ const fuse = FuseBox.init({
         JSONPlugin(),
         SVGPlugin(),
         tests && new MochaRunner(mochaGlob, mochaOptions, mochaBundles),
-        prod && UglifyJSPlugin(/*{
+        prod && UglifyJSPlugin({
             mangle: {
                 toplevel: true,
-                screw_ie8: true
+                ie8: true
             }
-        }*/)
+        })
     ]
 });
 
