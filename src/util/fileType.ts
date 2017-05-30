@@ -1,4 +1,8 @@
-const types = [
+export const types = [
+    {
+        regex: /m4a$/,
+        type: 'audio/mp4'
+    },
     {
         regex: /ogg$/,
         type: 'audio/ogg'

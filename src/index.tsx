@@ -22,7 +22,7 @@ declare const window: {
 
 const store = configureStore(reducer);
 
-const main = async () => {
+const main = () => {
     if (!window.__MIXQUEUE_INIT__) {
         tap();
         const getAudio = createGetAudio();

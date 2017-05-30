@@ -1,25 +1,4 @@
-import { MixFile, Track } from "../types/index";
 import * as audioActions from '../actions/audio';
-
-export const getAudioSources = (files: MixFile[], mixId: string) =>
-    files
-        .filter(f => [/ogg/i, /mp3/i].some(r => r.test(f.format)))
-        .slice()
-        .sort(a => (/ogg/i).test(a.format) ? -1 : 1)
-        .map(f => `https://archive.org/download/${mixId}/${f.name}`);
-
-export const getAudioSources2 = (files: MixFile[], mixId: string) =>
-    files
-        .filter(f => [/ogg/i, /mp3/i].some(r => r.test(f.format)))
-        .slice()
-        .sort(a => (/ogg/i).test(a.format) ? -1 : 1)
-        .map(f => `https://archive.org/download/${mixId}/${f.name}`);
-
-export const getPeaksImage = (files: MixFile[], mixId: string) =>
-    files
-        .filter(f => /png/i.test(f.format))
-        .map(f => `https://archive.org/download/${mixId}/${f.name}`)[0]
-    || '';
 
 export const getXFromPos = (el: HTMLElement | null, time: number, duration: number) => {
     if (el) {
@@ -47,12 +26,6 @@ export const setPosFromX = (duration: number, setTime: typeof audioActions.setCu
     (event: React.MouseEvent<HTMLDivElement>) => {
         setTime(getTimeFromX(event, duration));
     };
-
-export const getTrackLen = (track: Track, tracks: Track[], duration: number) => {
-    const next: Track | undefined = tracks[track.number];
-    const nt = next ? next.time : duration;
-    return nt - track.time;
-};
 
 export const secondsToTime = (totalSeconds: number) => {
     const hrs = Math.floor(totalSeconds / 3600);

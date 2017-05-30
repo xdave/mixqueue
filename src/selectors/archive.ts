@@ -53,9 +53,11 @@ export const getMixes = createSelector(
 
 export const getAudioUrls = (mix?: MixInfo) => mix
     ? mix.files
-        .filter(f => [/ogg/i, /mp3/i].some(r => r.test(f.format)))
+        .filter(f => [/ogg$/i, /mp3$/i, /m4a$/i].some(r => r.test(f.name)))
         .slice()
-        .sort(a => (/ogg/i).test(a.format) ? -1 : 1)
+        .sort(a => (/m4a$/i).test(a.name) ? -1 : 1)
+        .sort(a => (/mp3$/i).test(a.name) ? -1 : 1)
+        .sort(a => (/ogg$/i).test(a.name) ? -1 : 1)
         .map(f => `https://${mix.server}${mix.dir}/${f.name}`)
     : [];
 

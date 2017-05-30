@@ -1,6 +1,6 @@
-type TimeoutInit = RequestInit & { timeout?: number };
+export type TimeoutInit = RequestInit & { timeout?: number };
 
-interface FetchTimeout {
+export interface FetchTimeout {
     (url: string, options: TimeoutInit, f?: typeof fetch): Promise<Response>;
 }
 
