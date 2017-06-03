@@ -33,18 +33,15 @@ export default class ScrollToItem extends React.Component<Props, {}> {
 	}
 
 	componentDidMount() {
-		console.log('componentDidMount');
 		window.addEventListener('resize', this.resize);
 		this.scroll();
 	}
 
 	componentWillUnmount() {
-		console.log('componentWillUnmount');
 		window.removeEventListener('resize', this.resize);
 	}
 
 	componentDidUpdate() {
-		console.log('componentDidUpdate');
 		this.doResize();
 		this.scroll();
 	}
