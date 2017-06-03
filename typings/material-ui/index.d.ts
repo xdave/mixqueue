@@ -417,6 +417,7 @@ declare module 'material-ui/Card' {
 
 	export import CardMedia = MaterialUI.CardMedia
 	export import CardMediaProps = MaterialUI.CardMediaProps
+	export default Card;
 }
 
 declare module 'material-ui/Icon' {
@@ -851,4 +852,30 @@ declare module 'material-ui/Drawer' {
 	export import Drawer = MaterialUI.Drawer
 	export import DrawerProps = MaterialUI.DrawerProps
 	export default Drawer
+}
+
+declare module 'material-ui/Typography' {
+	export class Typography extends React.Component<{
+		align?: 'left' | 'center' | 'right' | 'justify';
+		children?: any;
+		classes?: any;
+		colorInherit?: boolean;
+		component?: 'string' | Function;
+		gutterBottom?: boolean;
+		noWrap?: boolean;
+		paragraph?: boolean;
+		secondary?: boolean;
+		type?: 'display4'
+		| 'display3'
+		| 'display2'
+		| 'display1'
+		| 'headline'
+		| 'title'
+		| 'subheading'
+		| 'body2'
+		| 'body1'
+		| 'caption'
+		| 'button'
+	}, {}> { }
+	export default Typography
 }

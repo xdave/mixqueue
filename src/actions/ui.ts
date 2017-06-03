@@ -1,26 +1,8 @@
-export type Type
-    = { type: 'UI_MIX_LIST_TOGGLE', value?: boolean }
-    | { type: 'UI_SET_SELECTING_POS', selectingPos: boolean }
-    | { type: 'UI_SET_POSITION_SELECTION_TIME', posSelectTime: number }
-    | { type: 'UI_SET_POSITION_SELECTION_X', posSelectX: number }
-    | { type: '@@router/LOCATION_CHANGE', payload: Location };
+import actionCreatorFactory from 'typescript-fsa';
 
-export const mixListToggle = (value?: boolean): Type => ({
-    type: 'UI_MIX_LIST_TOGGLE',
-    value
-});
+const create = actionCreatorFactory('ui');
 
-export const setSelectingPos = (selectingPos: boolean): Type => ({
-    type: 'UI_SET_SELECTING_POS',
-    selectingPos
-});
-
-export const setPosSelectionTime = (posSelectTime: number): Type => ({
-    type: 'UI_SET_POSITION_SELECTION_TIME',
-    posSelectTime
-});
-
-export const setPosSelectionX = (posSelectX: number): Type => ({
-    type: 'UI_SET_POSITION_SELECTION_X',
-    posSelectX
-});
+export const mixListToggle = create<{ value?: boolean }>('MIX_LIST_TOGGLE');
+export const setSelectingPos = create<{ selectingPos: boolean }>('SET_SELECTING_POS');
+export const setPosSelectionTime = create<{ posSelectTime: number }>('SET_POS_SELECTION_TIME');
+export const setPosSelectionX = create<{ posSelectX: number }>('SET_POS_SELECTION_X');

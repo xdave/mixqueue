@@ -2,12 +2,12 @@ import { combineReducers, Reducer } from 'redux';
 import { routerReducer } from 'react-router-redux';
 import { State } from '../types';
 import { archive } from './archive';
-import { audio } from './audio';
 import { ui } from './ui';
+import { music } from './music';
 
 export default combineReducers({
     archive,
-    audio,
     ui,
+    music,
     router: routerReducer
 }) as Reducer<State>;

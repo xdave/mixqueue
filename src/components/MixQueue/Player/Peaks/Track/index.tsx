@@ -11,11 +11,11 @@ import { ViewModel } from './ViewModel';
 
 const C = connect(Model, Controller, ViewModel);
 
-const View = C(({ classes, track, audio }) => {
+const View = C(({ classes, track, music }) => {
     return (
         <div
             className={classes.track}
-            style={{ left: qXFromPos('.peaks', track.time, audio.duration) }}
+            style={{ left: qXFromPos('.peaks', track.time, music.duration) }}
         >
             <span className={classes.number}>
                 {track.number}

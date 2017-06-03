@@ -1,10 +1,9 @@
-import { Dispatch } from "redux";
-import { bindActionCreators } from "redux";
-import * as audioActions from '../../../../actions/audio';
+import * as musicActions from '../../../../actions/music';
 import * as uiActions from '../../../../actions/ui';
 
-export type Actions = typeof audioActions & typeof uiActions;
-export const Controller = (dispatch: Dispatch<Actions>) => ({
-    ...bindActionCreators({ ...audioActions }, dispatch),
-    ...bindActionCreators({ ...uiActions }, dispatch),
-});
+export const Controller = {
+    setTime: musicActions.setTime,
+    setSelectingPos: uiActions.setSelectingPos,
+    setPosSelectionX: uiActions.setPosSelectionX,
+    setPosSelectionTime: uiActions.setPosSelectionTime
+};

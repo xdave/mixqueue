@@ -13,14 +13,12 @@ import { ViewModel } from './ViewModel';
 
 const C = connect(Model, Controller, ViewModel);
 
-const View = C(({ classes, peaks, tracks, audio, actions }) => {
+const View = C(({ classes, peaks, tracks, music, actions, mixId }) => {
     return (
         <div className={classes.peaksContainer}>
             <div className={classes.controlsContainer}>
                 <div className={classes.controls}>
-                    {/*<div>&nbsp;</div>*/}
-                    <Controls />
-                    {/*<div>&nbsp;</div>*/}
+                    <Controls mixId={mixId} />
                 </div>
             </div>
             <div style={{ display: 'flex', flexFlow: 'row', height: '100%' }}>
@@ -28,34 +26,34 @@ const View = C(({ classes, peaks, tracks, audio, actions }) => {
                     key={`peaks-display-${peaks}`}
                     className={classNames(classes.peaks, 'peaks')}
                     style={{ backgroundImage: peaks ? `url("${peaks}")` : 'none' }}
-                    onClick={setPosFromX(audio.duration, actions.setCurrentTime)}
-                    onMouseEnter={() => actions.setSelectingPos(true)}
-                    onMouseLeave={() => actions.setSelectingPos(false)}
+                    onClick={setPosFromX(music.duration, actions.setTime)}
+                    onMouseEnter={() => actions.setSelectingPos({ selectingPos: true })}
+                    onMouseLeave={() => actions.setSelectingPos({ selectingPos: false })}
                     onMouseMove={e => {
                         const { left } = e.currentTarget.getBoundingClientRect()
-                        actions.setPosSelectionX(e.clientX - left);
-                        const time = getTimeFromX(e, audio.duration);
-                        actions.setPosSelectionTime(time);
+                        actions.setPosSelectionX({ posSelectX: e.clientX - left });
+                        const time = getTimeFromX(e, music.duration);
+                        actions.setPosSelectionTime({ posSelectTime: time });
                     }}
                 >
                     <div
                         className={classes.playbackPosition}
                         style={{
-                            left: qXFromPos('.peaks', audio.currentTime, audio.duration)
+                            left: qXFromPos('.peaks', music.currentTime, music.duration)
                         }}
                     />
 
                     <div
                         className={classes.posSelector}
                         style={{
-                            display: audio.selectingPos
+                            display: music.selectingPos
                                 ? 'block'
                                 : 'none',
-                            left: `${audio.posSelectX}px`,
+                            left: `${music.posSelectX}px`,
                         }}
                     >
                         <div className={classes.posSelectTime}>
-                            {secondsToTime2(audio.posSelectTime)}
+                            {secondsToTime2(music.posSelectTime)}
                         </div>
                     </div>
 
@@ -64,10 +62,10 @@ const View = C(({ classes, peaks, tracks, audio, actions }) => {
                     ))}
 
                     <div className={classes.currentTime}>
-                        {secondsToTime2(audio.currentTime)}
+                        {secondsToTime2(music.currentTime)}
                     </div>
                     <div className={classes.duration}>
-                        {secondsToTime2(audio.duration)}
+                        {secondsToTime2(music.duration)}
                     </div>
                 </div>
             </div>

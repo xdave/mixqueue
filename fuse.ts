@@ -49,6 +49,7 @@ const fuse = FuseBox.init({
     alias: {
         'react': 'preact-compat',
         'react-dom': 'preact-compat',
+        'create-react-class': 'preact-compat/lib/create-react-class',
         'react-tap-event-plugin': 'preact-tap-event-plugin'
     },
     plugins: [

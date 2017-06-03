@@ -1,19 +1,12 @@
 import { State } from "../../../../types/index";
-import { Actions } from "./Controller";
+import { Controller } from "./Controller";
 import { Props } from "./Model";
+import { getMixById } from "../../../../selectors/archive";
 
-export const ViewModel = (state: State, actions: Actions, props: Props) => ({
-    mixId: state.ui.mixId,
-    mixes: state.archive.searchResults,
+export const ViewModel = (state: State, actions: typeof Controller, props: Props) => ({
+    mixId: props.mixId,
+    mix: getMixById(state, props.mixId),
     classes: props.classes,
     width: props.width,
-    actions,
-    preload: async () => {
-        const { mixId } = state.ui;
-        const { searchResults } = state.archive;
-        const mixInfo = searchResults.find(m => m.identifier === mixId);
-        if (mixId && !mixInfo && actions.searchFetch) {
-            return await actions.searchFetch();
-        }
-    }
+    actions
 });

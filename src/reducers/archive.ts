@@ -1,38 +1,39 @@
+import { reducerWithInitialState } from 'typescript-fsa-reducers';
+import * as actions from '../actions/archive';
 import { Archive } from "../types";
-import { Type } from '../actions/archive';
 
-export const initial: Archive = {
+export const initial: Archive.State = {
     searchResults: [],
-    mixes: []
+    mixes: [],
+    errors: []
 }
 
-export const archive = (state = initial, action: Type) => {
-    switch (action.type) {
-        case 'ARCHIVE_SEARCH_FETCHING':
-            return state;
-        case 'ARCHIVE_SEARCH_FETCHED':
-            return {
-                ...state,
-                searchResults: action.results.response.docs
-            };
-        case 'ARCHIVE_METADATA_FETCHING':
-            return state;
-        case 'ARCHIVE_METADATA_FETCHED': {
-            const id = action.mixInfo.metadata.identifier;
-            const mixes = state.mixes.slice();
-            const index = mixes.findIndex(m => m.metadata.identifier === id);
-            if (index === -1) {
-                mixes.push(action.mixInfo);
-            } else {
-                mixes[index] = action.mixInfo;
-            }
-
-            return {
-                ...state,
-                mixes
-            }
+export const archive = reducerWithInitialState(initial)
+    .case(actions.searchAsync.started, state => state)
+    .case(actions.searchAsync.done, (state, { result }) => ({
+        ...state,
+        searchResults: result.response.docs
+    }))
+    .case(actions.searchAsync.failed, (state, { error }) => ({
+        ...state,
+        errors: [...state.errors, error]
+    }))
+    .case(actions.fetchMetadataAsync.started, state => state)
+    .case(actions.fetchMetadataAsync.done, (state, { result }) => {
+        const id = result.metadata.identifier;
+        const mixes = state.mixes.slice();
+        const index = mixes.findIndex(m => m.metadata.identifier === id);
+        if (index === -1) {
+            mixes.push(result);
+        } else {
+            mixes[index] = result;
         }
-        default:
-            return state;
-    }
-}
+        return {
+            ...state,
+            mixes
+        };
+    })
+    .case(actions.fetchMetadataAsync.failed, (state, { error }) => ({
+        ...state,
+        errors: [...state.errors, error]
+    }));

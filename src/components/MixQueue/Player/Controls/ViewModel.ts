@@ -1,17 +1,16 @@
-import { State, MixInfo } from "../../../../types/index";
-import { Actions } from "./Controller";
+import { State } from "../../../../types/index";
+import { Controller } from "./Controller";
 import { Props } from "./Model";
-import { getMixById, getAudioUrls } from "../../../../selectors/archive";
+import { getMixById } from "../../../../selectors/archive";
 
-export const ViewModel = (state: State, actions: Actions, props: Props) => ({
-    playing: state.audio.playing,
-    mix: getMixById(state, state.ui.mixId),
-    play: (mix?: MixInfo) => () => {
-        if (mix) {
-            actions.setSource(getAudioUrls(mix));
-            actions.setPlaying(true);
+export const ViewModel = (state: State, actions: typeof Controller, props: Props) => ({
+    mixId: props.mixId,
+    playing: state.music.playing,
+    play: () => {
+        if (getMixById(state, props.mixId)) {
+            actions.play({});
         }
     },
-    pause: () => actions.setPlaying(false),
+    pause: () => actions.pause({}),
     className: props.className
 });

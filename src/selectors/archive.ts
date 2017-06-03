@@ -2,7 +2,7 @@ import { State, MixInfo, Track } from '../types';
 import { createSelector } from 'reselect';
 
 const getState = (state: State) => state.archive;
-const getAudioState = (state: State) => state.audio;
+const getMusicState = (state: State) => state.music;
 
 const _getMixById = (state: State, id: string) =>
     state.archive.mixes.find(m => m.metadata.identifier === id);
@@ -54,7 +54,6 @@ export const getMixes = createSelector(
 export const getAudioUrls = (mix?: MixInfo) => mix
     ? mix.files
         .filter(f => [/ogg$/i, /mp3$/i, /m4a$/i].some(r => r.test(f.name)))
-        .slice()
         .sort(a => (/m4a$/i).test(a.name) ? -1 : 1)
         .sort(a => (/mp3$/i).test(a.name) ? -1 : 1)
         .sort(a => (/ogg$/i).test(a.name) ? -1 : 1)
@@ -72,10 +71,10 @@ export const getTrackByNumber = createSelector(
 );
 
 export const getCurrentTrack = createSelector(
-    [getTracks, getAudioState],
+    [getTracks, getMusicState],
     (tracks, { currentTime }): Track => tracks.reduce(((prev, cur) =>
         (currentTime >= prev.time && currentTime < cur.time)
             ? prev
             : cur
-    ), { time: 0, title: '', number: 0, timeDisplay: '00:00:00.000' })
+    ), { time: 0, title: '', number: 0, timeDisplay: '' })
 );

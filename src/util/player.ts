@@ -1,4 +1,4 @@
-import * as audioActions from '../actions/audio';
+import * as musicActions from '../actions/music';
 
 export const getXFromPos = (el: HTMLElement | null, time: number, duration: number) => {
     if (el) {
@@ -22,9 +22,9 @@ export const getTimeFromX = (event: React.MouseEvent<HTMLDivElement>, duration: 
     return factor * duration;
 }
 
-export const setPosFromX = (duration: number, setTime: typeof audioActions.setCurrentTime) =>
+export const setPosFromX = (duration: number, setTime: typeof musicActions.setTime) =>
     (event: React.MouseEvent<HTMLDivElement>) => {
-        setTime(getTimeFromX(event, duration));
+        setTime({ time: getTimeFromX(event, duration) });
     };
 
 export const secondsToTime = (totalSeconds: number) => {

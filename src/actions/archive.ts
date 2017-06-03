@@ -1,20 +1,13 @@
+import actionCreatorFactory from 'typescript-fsa';
+import thunk from '../util/async';
 import * as fetchP from 'fetch-jsonp';
 import { fetchT } from "../util/fetchTimeout";
-import { MixSearchResults, MixInfo, Thunk } from "../types/index";
+import { Archive } from "../types";
 
-export type Type
-    = { type: 'ARCHIVE_SEARCH_FETCHING' }
-    | { type: 'ARCHIVE_SEARCH_FETCHED', results: MixSearchResults }
-    | { type: 'ARCHIVE_METADATA_FETCHING' }
-    | { type: 'ARCHIVE_METADATA_FETCHED', mixInfo: MixInfo };
-
-
-// Common
+const fetchOpts: RequestInit = { mode: 'cors', cache: "force-cache" };
 const baseURL = 'https://archive.org';
-
-// Search
 const searchPage = 'advancedsearch.php';
-const searchTerm = '"Dave+Gradwell"+Mix+Session';
+// const searchTerm = '"Dave+Gradwell"+Mix+Session';
 const searchFields = [
     'creator',
     'date',
@@ -24,63 +17,56 @@ const searchFields = [
     'mediatype',
     'subject',
     'title'
-].join('&fl[]=')
-const searchURL = `${searchPage}?q=${searchTerm}&fl[]=${searchFields}&output=json`;
+].join('&fl[]=');
 
-export const searchFetching = (): Type => ({
-    type: 'ARCHIVE_SEARCH_FETCHING'
-});
-export const searchFetched = (results: MixSearchResults): Type => ({
-    type: 'ARCHIVE_SEARCH_FETCHED',
-    results
-});
+const searchURL = (q: string) =>
+    `${searchPage}?q=${q}&fl[]=${searchFields}&output=json`;
 
-export const searchFetch = (): Thunk => async dispatch => {
-    dispatch(searchFetching());
+const create = actionCreatorFactory('archive');
 
-    const url1 = encodeURI(`${baseURL}/${searchURL}`);
+export const searchAsync = create.async<
+    Archive.Search.Params, Archive.Search.Response, Error>('SEARCH');
+
+export const search = thunk(searchAsync, async params => {
+    const url1 = encodeURI(`${baseURL}/${searchURL(params.q)}`);
     const url2 = './mixes/index.json';
 
     let response: Response;
 
     try {
         response = await fetchT(url1, { cache: "force-cache", timeout: 2000 }, fetchP);
+        if (response.status >= 400) {
+            throw new Error(`${response.status} ${response.statusText}`);
+        }
     } catch (err) {
-        console.log(err);
-        console.log(err, 'Using local mix manifest file...');
+        console.warn(err);
+        console.warn('Using local mix manifest file...');
         response = await fetch(url2, { cache: "force-cache" });
+        if (response.status >= 400) {
+            throw new Error(`${response.status} ${response.statusText}`);
+        }
     }
 
-    const results = await response.json() as MixSearchResults;
-
-    dispatch(searchFetched(results));
-    return results;
-};
-
-
-// Metadata
-const fetchOpts: RequestInit = { mode: 'cors', cache: "force-cache" };
-
-export const metadataFetching = (): Type => ({
-    type: 'ARCHIVE_METADATA_FETCHING'
-});
-export const metadataFetched = (mixInfo: MixInfo): Type => ({
-    type: 'ARCHIVE_METADATA_FETCHED',
-    mixInfo
+    const results = await response.json();
+    return results as Archive.Search.Response;
 });
 
-export const metadataFetch = (id: string): Thunk => async dispatch => {
-    dispatch(metadataFetching());
+export const fetchMetadataAsync = create.async<
+    Archive.Metadata.Params, Archive.Metadata.Response, Error>('FETCH_METADATA');
 
+export const fetchMetadata = thunk(fetchMetadataAsync, async ({ id }) => {
     const url = encodeURI(`${baseURL}/metadata/${id}?output=json`);
     const response = await fetch(url, fetchOpts);
 
-    const mixInfo = await response.json() as MixInfo;
+    if (response.status >= 400) {
+        throw new Error(`${response.status} ${response.statusText}`);
+    }
+
+    const mixInfo = await response.json() as Archive.Metadata.Response;
 
     if (!mixInfo.metadata) {
         throw new Error(`The mix with id '${id}' was not found.`);
     }
 
-    dispatch(metadataFetched(mixInfo));
     return mixInfo;
-};
+});

@@ -1,20 +1,18 @@
+require('smoothscroll-polyfill').polyfill();
+
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import * as tap from 'react-tap-event-plugin';
 import { Provider } from 'react-redux';
 import { Route, Switch } from "react-router-dom";
 import { ConnectedRouter } from 'react-router-redux';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import { configureStore, history } from './store';
 import reducer from './reducers';
-import * as audioActions from './actions/audio'
-import configureAudioControl, { createGetAudio } from "./util/audio";
+import * as musicActions from './actions/music'
+import { music } from "./util/music";
 import theme from './util/theme';
 import MixQueue from './components/MixQueue';
-import Test from './components/Test';
-
-require('smoothscroll-polyfill').polyfill();
-
-const { MuiThemeProvider } = require('material-ui/styles');
 
 declare const window: {
     __MIXQUEUE_INIT__: boolean;
@@ -25,9 +23,7 @@ const store = configureStore(reducer);
 const main = () => {
     if (!window.__MIXQUEUE_INIT__) {
         tap();
-        const getAudio = createGetAudio();
-        const control = configureAudioControl(store, getAudio);
-        store.dispatch(audioActions.setAudioControl(() => control))
+        store.dispatch(musicActions.setControl({ control: music }));
         window.__MIXQUEUE_INIT__ = true;
     }
 };
@@ -53,9 +49,8 @@ const Main = () => (
         <MuiThemeProvider>
             <div>
                 <Switch>
-                    <Route exact path="/test" render={() =>
-                        <Test msg="This is a test." />} />
-                    <Route render={() => <MixQueue />}/>
+                    <Route exact path="/" component={MixQueue} />
+                    <Route path="/:mixId" component={MixQueue} />
                 </Switch>
             </div>
         </MuiThemeProvider>

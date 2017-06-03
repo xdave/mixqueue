@@ -25,24 +25,17 @@ const github = require('../../../icons/github.svg');
 
 export const C = connect(Model, Controller, ViewModel);
 
-export const View = C(({ classes, control, actions }) => (
+export const View = C(({ classes, actions, mixId }) => (
     <AppBar className={classes.appBar}>
         <Toolbar>
             <Grid container className={classes.gridContainer}>
-                <Grid item onClick={async () => {
-                    if (control) {
-                        const audioControl = control();
-                        if (audioControl) {
-                            await actions.setPlaying(false);
-                            audioControl.audio.element.src = ''
-                            actions.setDuration(0);
-                        }
-                    }
-                }}>
-                    <Link to={`/`}>
-                        <Icon><LibraryMusic /></Icon>
-                    </Link>
-                </Grid>
+                <Hidden only={['xs']}>
+                    <Grid item onClick={actions.unload}>
+                        <Link to={`/`}>
+                            <Icon><LibraryMusic /></Icon>
+                        </Link>
+                    </Grid>
+                </Hidden>
                 <Hidden only={['xs']}>
                     <Grid item>
                         <Typography type="title" colorInherit>
@@ -51,7 +44,7 @@ export const View = C(({ classes, control, actions }) => (
                     </Grid>
                 </Hidden>
                 <Grid item>
-                    <MixSelector />
+                    <MixSelector mixId={mixId} />
                 </Grid>
                 <Hidden only={['xs', 'sm']}>
                     <Grid item style={{ marginLeft: 'auto' }}>

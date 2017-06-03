@@ -1,13 +1,6 @@
 import * as React from 'react';
 import { findDOMNode } from 'react-dom';
 
-export const isScrolledIntoView = (parent: HTMLElement, item: HTMLElement) => {
-	const { top, bottom } = item.getBoundingClientRect();
-	const parentHeight = parent.getBoundingClientRect().height;
-	const isVisible = (top >= 0) && (bottom <= parentHeight);
-	return isVisible;
-};
-
 export interface Props {
 	id?: string;
 	className?: string;
@@ -17,7 +10,6 @@ export interface Props {
 }
 
 export default class ScrollToItem extends React.Component<Props, {}> {
-	shouldScroll: boolean;
 
 	doResize = () => {
 		if (this.props.setHeight) {
@@ -31,36 +23,30 @@ export default class ScrollToItem extends React.Component<Props, {}> {
 		this.forceUpdate();
 	}
 
-	componentDidMount() {
-		window.addEventListener('resize', this.resize);
-	}
-
-	componentWillUnmount() {
-		window.removeEventListener('resize', this.resize);
-	}
-
-	componentWillUpdate() {
+	scroll = () => {
 		const selector = `.${this.props.itemSelector}`;
 		const el = findDOMNode(this) as HTMLDivElement;
 		const item = el.querySelector(selector) as HTMLElement;
 		if (item) {
-			return (!isScrolledIntoView(el, item));
+			item.scrollIntoView({ behavior: 'smooth' });
 		}
 	}
+
+	componentDidMount() {
+		console.log('componentDidMount');
+		window.addEventListener('resize', this.resize);
+		this.scroll();
+	}
+
+	componentWillUnmount() {
+		console.log('componentWillUnmount');
+		window.removeEventListener('resize', this.resize);
+	}
+
 	componentDidUpdate() {
-		if (this.shouldScroll) {
-			this.doResize();
-			const selector = `.${this.props.itemSelector}`;
-			const el = findDOMNode(this) as HTMLDivElement;
-			const item = el.querySelector(selector) as HTMLElement;
-			if (item) {
-				item.scrollIntoView({ behavior: 'smooth' });
-			}
-		}
-	}
-	shouldComponentUpdate() {
-		this.shouldScroll = true;
-		this.componentDidUpdate();
+		console.log('componentDidUpdate');
+		this.doResize();
+		this.scroll();
 	}
 
 	render() {

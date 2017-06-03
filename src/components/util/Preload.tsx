@@ -15,7 +15,7 @@ export class Preload extends React.Component<PreloadProps, PreloadState> {
     async preload() {
         await this.setState({ renderOK: !this.props.wait });
         await this.props.preload();
-        await this.setState({ renderOK: true })
+        await this.setState({ renderOK: true });
     }
 
     renderPreloaded() {

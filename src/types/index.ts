@@ -1,4 +1,4 @@
-import { AudioControl } from "../util/audio";
+import { MusicControl } from "../util/music";
 import { RouterState } from "react-router-redux";
 import { ThunkAction } from "redux-thunk";
 
@@ -55,8 +55,8 @@ export type MixInfo = {
     server: string;
     dir: string;
 } & {
-    [id: string]: CueSheet;
-}
+        [id: string]: CueSheet;
+    }
 
 export interface Track {
     number: number;
@@ -71,27 +71,32 @@ export interface CueSheet {
     tracks: Track[]
 }
 
-// export interface Mix {
-//     id: string;
-//     title: string;
-//     date: string;
-//     files: MixFile[];
-//     cueSheet: CueSheet;
-//     sources: string[];
-// }
+export namespace Archive {
+    export interface Failure {
+        message: string;
+        stack?: string;
+    }
 
-export interface Audio {
-    control?: () => AudioControl;
-    currentTime: number;
-    playing: boolean;
-    duration: number;
-    seeking: boolean;
-    waiting: boolean;
-}
+    export namespace Search {
+        export type Response = MixSearchResults;
 
-export interface Archive {
-    searchResults: MixSearchResult[];
-    mixes: MixInfo[];
+        export interface Params {
+            q: string;
+        }
+    }
+
+    export namespace Metadata {
+        export type Response = MixInfo;
+        export interface Params {
+            id: string;
+        }
+    }
+
+    export interface State {
+        searchResults: MixSearchResult[];
+        mixes: MixInfo[];
+        errors: Failure[]
+    }
 }
 
 export interface UI {
@@ -102,11 +107,23 @@ export interface UI {
     posSelectX: number;
 }
 
+export namespace Music {
+    export interface State {
+        control: () => MusicControl;
+        currentTime: number;
+        duration: number;
+        playing: boolean;
+        waiting: boolean;
+        seeking: boolean;
+        src: string;
+    }
+}
+
 export interface State {
-    audio: Audio;
-    archive: Archive;
-    router: RouterState;
+    music: Music.State;
+    archive: Archive.State;
     ui: UI;
+    router: RouterState;
 }
 
 export type Thunk = ThunkAction<void, State, void>;

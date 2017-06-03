@@ -2,10 +2,10 @@ import { State } from "../../../../../types/index";
 import { Props } from "./Model";
 
 export const ViewModel = (state: State, actions: {}, props: Props) => ({
-    audio: {
-        playing: state.audio.playing,
-        duration: state.audio.duration,
-        currentTime: state.audio.currentTime,
+    music: {
+        playing: state.music.playing,
+        duration: state.music.duration,
+        currentTime: state.music.currentTime,
     },
     actions,
     classes: props.classes,

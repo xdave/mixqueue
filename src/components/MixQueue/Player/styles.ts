@@ -1,14 +1,16 @@
-import theme from '../../../../util/theme';
+import theme from '../../../util/theme';
 
-export default {
+export const styles = {
     paper: {
+        position: 'relative',
         margin: `${theme.spacing.unit}px`,
         padding: `${theme.spacing.unit}px`
     },
     tracklist: {
-        composes: '$paper'
+        height: '175px',
+        overflowY: 'scroll'
     },
     track: {
         fontWeight: 'bold'
     }
-};
+}

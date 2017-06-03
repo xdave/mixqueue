@@ -1,14 +1,17 @@
-import { compose, Action, Store, Reducer } from 'redux';
-import { createStore, applyMiddleware } from 'redux';
-import createHistory from 'history/createHashHistory';
-import { routerMiddleware } from 'react-router-redux';
+import { Action, Store, Reducer } from 'redux';
+import { compose, createStore, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
+import { routerMiddleware } from 'react-router-redux';
+import createHistory from 'history/createHashHistory';
 import { State } from '../types';
+import { MusicControl } from "../util/music";
+import { Middleware } from "redux";
 
 const prod = process.env.NODE_ENV === 'production';
 
 declare const window: {
     __REDUX_STORE__: Store<State>;
+    __MUSIC__: MusicControl;
 } & Window;
 
 export const history = createHistory();
@@ -24,7 +27,7 @@ const getCommonMiddleware = () => [
     routerMiddleware(history)
 ];
 
-const getDevMiddleware = () => prod
+const getDevMiddleware = (): Middleware[] => prod
     ? []
     : [
         r('redux-immutable-state-invariant').default(),
@@ -32,28 +35,33 @@ const getDevMiddleware = () => prod
             level: 'info',
             collapsed: true,
             diff: true,
-            predicate: (_: State, action: Action) => !([
-                'AUDIO_SET_CURRENT_TIME_DONE',
-                'UI_SET_SELECTING_POS',
-                'UI_SET_POSITION_SELECTION_TIME',
-                'UI_SET_POSITION_SELECTION_X'
-            ].some(t => action.type === t))
+            predicate: (_: State, action: Action) => (
+                [
+                    /TIME_UPDATE/,
+                    /SELECTION/,
+                    /SELECTING/
+                ].every(t => !t.test(action.type))
+            )
         }),
     ];
 
 export const configureStore = (reducer: Reducer<State>) => {
-    const store = window.__REDUX_STORE__;
+    const existingStore = window.__REDUX_STORE__;
+    const music = window.__MUSIC__;
 
     const middleware = [
         ...getCommonMiddleware(),
         ...getDevMiddleware(),
     ];
 
-    return store
-        ? (store.replaceReducer(reducer), store)
+    const store = existingStore
+        ? (existingStore.replaceReducer(reducer), existingStore)
         : window.__REDUX_STORE__ = createStore(
             reducer,
-            undefined, // TODO: FIXME: Load state from localStorage/cookie?
             composeEnhancers(applyMiddleware(...middleware))
         );
+
+    music ? music : window.__MUSIC__ = new MusicControl(store);
+
+    return store as Store<State>;
 };

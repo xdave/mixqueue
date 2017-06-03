@@ -8,7 +8,4 @@ export type Props = Sheet<typeof styles> & WidthProps & {
     track: Track;
 }
 
-export const Model = (state: State, props: Props) => ({
-    ...state,
-    ...props
-});
+export const Model = (state: State) => state;

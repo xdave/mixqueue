@@ -1,8 +1,6 @@
-import { bindActionCreators, Dispatch } from "redux";
-import * as audioActions from '../../../../actions/audio';
+import * as musicActions from '../../../../actions/music';
 
-export type Actions = typeof audioActions;
-
-export const Controller = (dispatch: Dispatch<Actions>) => ({
-    ...bindActionCreators({ ...audioActions }, dispatch)
-});
+export const Controller = {
+    play: musicActions.play,
+    pause: musicActions.pause
+};
