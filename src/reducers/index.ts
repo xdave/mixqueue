@@ -5,9 +5,12 @@ import { archive } from './archive';
 import { ui } from './ui';
 import { music } from './music';
 
-export default combineReducers({
-    archive,
-    ui,
-    music,
-    router: routerReducer
-}) as Reducer<State>;
+export const createReducer = (reducers?: { [idx: string]: Reducer<State> }) => {
+    return combineReducers({
+        archive,
+        ui,
+        music,
+        router: routerReducer,
+        ...reducers
+    }) as Reducer<State>;
+};

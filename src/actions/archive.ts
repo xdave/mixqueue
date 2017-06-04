@@ -7,7 +7,6 @@ import { Archive } from "../types";
 const fetchOpts: RequestInit = { mode: 'cors', cache: "force-cache" };
 const baseURL = 'https://archive.org';
 const searchPage = 'advancedsearch.php';
-// const searchTerm = '"Dave+Gradwell"+Mix+Session';
 const searchFields = [
     'creator',
     'date',
@@ -25,7 +24,10 @@ const searchURL = (q: string) =>
 const create = actionCreatorFactory('archive');
 
 export const searchAsync = create.async<
-    Archive.Search.Params, Archive.Search.Response, Error>('SEARCH');
+    Archive.Search.Params,
+    Archive.Search.Response,
+    Error
+    >('SEARCH');
 
 export const search = thunk(searchAsync, async params => {
     const url1 = encodeURI(`${baseURL}/${searchURL(params.q)}`);
@@ -52,7 +54,10 @@ export const search = thunk(searchAsync, async params => {
 });
 
 export const fetchMetadataAsync = create.async<
-    Archive.Metadata.Params, Archive.Metadata.Response, Error>('FETCH_METADATA');
+    Archive.Metadata.Params,
+    Archive.Metadata.Response,
+    Error
+    >('FETCH_METADATA');
 
 export const fetchMetadata = thunk(fetchMetadataAsync, async ({ id }) => {
     const url = encodeURI(`${baseURL}/metadata/${id}?output=json`);

@@ -9,11 +9,10 @@ export interface Props {
 	setHeight?: Function;
 }
 
-export default class ScrollToItem extends React.Component<Props, {}> {
-
+export default class ScrollToItem extends React.Component<Props, void> {
 	doResize = () => {
 		if (this.props.setHeight) {
-			const el = findDOMNode(this) as HTMLElement;
+			const el = findDOMNode<HTMLElement>(this);
 			el.style.height = this.props.setHeight();
 		}
 	}
@@ -25,7 +24,7 @@ export default class ScrollToItem extends React.Component<Props, {}> {
 
 	scroll = () => {
 		const selector = `.${this.props.itemSelector}`;
-		const el = findDOMNode(this) as HTMLDivElement;
+		const el = findDOMNode<HTMLElement>(this);
 		const item = el.querySelector(selector) as HTMLElement;
 		if (item) {
 			item.scrollIntoView({ behavior: 'smooth' });
@@ -34,6 +33,7 @@ export default class ScrollToItem extends React.Component<Props, {}> {
 
 	componentDidMount() {
 		window.addEventListener('resize', this.resize);
+		this.doResize();
 		this.scroll();
 	}
 

@@ -6,7 +6,7 @@ import Paper from 'material-ui/Paper';
 import Peaks from './Peaks';
 import { Preload } from "../../util/Preload";
 
-// import Tracklist from './Tracklist';
+import Tracklist from './Tracklist';
 
 import { styles } from './styles';
 import { Model } from "./Model";
@@ -25,8 +25,8 @@ const View = C(({ classes, archive, preload, match }) => {
                 <Paper className={classes.paper}>
                     <Peaks mixId={match.params.mixId} />
                 </Paper>
+                <Tracklist mixId={match.params.mixId} />
             </Preload>
-            {/*<Tracklist mixId={match.params.mixId} />*/}
         </div>
     )
 });

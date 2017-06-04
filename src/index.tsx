@@ -1,3 +1,5 @@
+
+
 require('smoothscroll-polyfill').polyfill();
 
 import * as React from 'react';
@@ -8,7 +10,6 @@ import { Route, Switch } from "react-router-dom";
 import { ConnectedRouter } from 'react-router-redux';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import { configureStore, history } from './store';
-import reducer from './reducers';
 import * as musicActions from './actions/music'
 import { music } from "./util/music";
 import theme from './util/theme';
@@ -16,17 +17,9 @@ import MixQueue from './components/MixQueue';
 
 declare const window: {
     __MIXQUEUE_INIT__: boolean;
-} & Window;
-
-const store = configureStore(reducer);
-
-const main = () => {
-    if (!window.__MIXQUEUE_INIT__) {
-        tap();
-        store.dispatch(musicActions.setControl({ control: music }));
-        window.__MIXQUEUE_INIT__ = true;
-    }
 };
+
+const store = configureStore();
 
 class App extends React.Component<{}, void> {
     render() {
@@ -46,15 +39,19 @@ class App extends React.Component<{}, void> {
 
 const Main = () => (
     <App>
-        <MuiThemeProvider>
-            <div>
-                <Switch>
-                    <Route exact path="/" component={MixQueue} />
-                    <Route path="/:mixId" component={MixQueue} />
-                </Switch>
-            </div>
-        </MuiThemeProvider>
+        <Switch>
+            <Route exact path="/" component={MixQueue} />
+            <Route path="/:mixId" component={MixQueue} />
+        </Switch>
     </App>
 );
+
+const main = () => {
+    if (!window.__MIXQUEUE_INIT__) {
+        tap();
+        store.dispatch(musicActions.setControl({ control: music }));
+        window.__MIXQUEUE_INIT__ = true;
+    }
+};
 
 ReactDOM.render(<Main />, document.querySelector('#app'), main);
