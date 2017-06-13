@@ -3,6 +3,7 @@ import thunk from '../util/async';
 import * as fetchP from 'fetch-jsonp';
 import { fetchT } from "../util/fetchTimeout";
 import { Archive } from "../types";
+import { parse } from "../util/cueSheet";
 
 const fetchOpts: RequestInit = { mode: 'cors', cache: "force-cache" };
 const baseURL = 'https://archive.org';
@@ -68,6 +69,24 @@ export const fetchMetadata = thunk(fetchMetadataAsync, async ({ id }) => {
     }
 
     const mixInfo = await response.json() as Archive.Metadata.Response;
+
+    if (!mixInfo[mixInfo.metadata.identifier]) {
+        const [cue] = mixInfo.files.filter(f => f.name.indexOf('.cue') > - 1);
+        const cueUrl = `https://s3.us.archive.org/${mixInfo.metadata.identifier}/${cue.name}`;
+        const cueRes = await fetch(cueUrl);
+        const cueTxt = await cueRes.text();
+
+        mixInfo[mixInfo.metadata.identifier] = {
+            id: mixInfo.metadata.identifier,
+            title: mixInfo.metadata.title,
+            tracks: parse(cueTxt).tracks.map(track => ({
+                number: track.number,
+                title: `${track.artist} ${track.title} [${track.label}]`,
+                time: track.time,
+                timeDisplay: ''
+            }))
+        };
+    }
 
     if (!mixInfo.metadata) {
         throw new Error(`The mix with id '${id}' was not found.`);
