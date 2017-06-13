@@ -72,7 +72,8 @@ export const fetchMetadata = thunk(fetchMetadataAsync, async ({ id }) => {
 
     if (!mixInfo[mixInfo.metadata.identifier]) {
         const [cue] = mixInfo.files.filter(f => f.name.indexOf('.cue') > - 1);
-        const cueUrl = `http://s3.us.archive.org/${mixInfo.metadata.identifier}/${cue.name}`;
+        const server = mixInfo.server.replace('us.archive', 's3dns.us.archive');
+        const cueUrl = `https://${server}/${mixInfo.metadata.identifier}/${cue.name}`;
         const cueRes = await fetch(cueUrl);
         const cueTxt = await cueRes.text();
 
