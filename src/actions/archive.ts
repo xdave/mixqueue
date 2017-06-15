@@ -83,7 +83,7 @@ export const fetchMetadata = thunk(fetchMetadataAsync, async ({ id }) => {
             title: mixInfo.metadata.title,
             tracks: parse(cueTxt).tracks.map(track => ({
                 number: track.number,
-                title: `${track.artist} ${track.title} [${track.label}]`,
+                title: `${track.artist} - ${track.title} [${track.label}]`,
                 time: track.time,
                 timeDisplay: ''
             }))
