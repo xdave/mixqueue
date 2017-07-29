@@ -1,5 +1,5 @@
 import actionCreatorFactory from 'typescript-fsa';
-import thunk from '../util/async';
+import { bindThunkAction } from 'typescript-fsa-redux-thunk';
 import * as fetchP from 'fetch-jsonp';
 import { fetchT } from "../util/fetchTimeout";
 import { Archive } from "../types";
@@ -30,14 +30,14 @@ export const searchAsync = create.async<
     Error
     >('SEARCH');
 
-export const search = thunk(searchAsync, async params => {
+export const search = bindThunkAction(searchAsync, async params => {
     const url1 = encodeURI(`${baseURL}/${searchURL(params.q)}`);
     const url2 = './mixes/index.json';
 
     let response: Response;
 
     try {
-        response = await fetchT(url1, { cache: "force-cache", timeout: 2000 }, fetchP);
+        response = await fetchT(url1, { cache: "force-cache", timeout: 2000 }, fetchP as any);
         if (response.status >= 400) {
             throw new Error(`${response.status} ${response.statusText}`);
         }
@@ -60,7 +60,7 @@ export const fetchMetadataAsync = create.async<
     Error
     >('FETCH_METADATA');
 
-export const fetchMetadata = thunk(fetchMetadataAsync, async ({ id }) => {
+export const fetchMetadata = bindThunkAction(fetchMetadataAsync, async ({ id }) => {
     const url = encodeURI(`${baseURL}/metadata/${id}?output=json`);
     const response = await fetch(url, fetchOpts);
 

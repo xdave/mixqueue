@@ -1,4 +1,6 @@
-export type TimeoutInit = RequestInit & { timeout?: number };
+import * as fetchP from 'fetch-jsonp';
+
+export type TimeoutInit = RequestInit & { timeout?: number } & fetchP.Options;
 
 export interface FetchTimeout {
     (url: string, options: TimeoutInit, f?: typeof fetch): Promise<Response>;

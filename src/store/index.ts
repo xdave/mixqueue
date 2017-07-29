@@ -22,10 +22,10 @@ declare const window: {
 
 export const history = createHistory();
 
-const r = require;
+// const r = require;
 
 const composeEnhancers: typeof compose = !prod
-    ? r('redux-devtools-extension').composeWithDevTools({})
+    ? require('redux-devtools-extension').composeWithDevTools({})
     : compose;
 
 const getCommonMiddleware = () => [
@@ -36,8 +36,8 @@ const getCommonMiddleware = () => [
 const getDevMiddleware = (): Middleware[] => prod
     ? []
     : [
-        r('redux-immutable-state-invariant').default(),
-        r('redux-logger').createLogger({
+        require('redux-immutable-state-invariant').default(),
+        require('redux-logger').createLogger({
             level: 'info',
             collapsed: true,
             diff: true,

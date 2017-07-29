@@ -13,9 +13,9 @@ window.AudioContext = window.AudioContext || window.webkitAudioContext;
 export const music = () => window.__MUSIC__;
 
 export class MusicControl {
-    context: AudioContext;
+    // context: AudioContext;
     element: HTMLAudioElement;
-    source?: MediaElementAudioSourceNode;
+    // source?: MediaElementAudioSourceNode;
     actions: {
         setPlaying: typeof musicActions.setPlaying;
         setWaiting: typeof musicActions.setWaiting;
@@ -25,8 +25,9 @@ export class MusicControl {
     };
 
     constructor(public store: Store<State>) {
-        this.context = new AudioContext();
-        this.element = new Audio();
+        // this.context = new AudioContext();
+        this.element = document.getElementById('temp_audio') as HTMLAudioElement;
+        // this.element = new Audio();
         this.element.crossOrigin = 'anonymous';
         this.element.autoplay = true;
         this.actions = bindActionCreators({
@@ -47,12 +48,12 @@ export class MusicControl {
     }
 
     onLoad = () => {
-        if (this.context && this.element && !this.source) {
-            this.source = this.context
-                .createMediaElementSource(this.element);
+        // if (this.context && this.element && !this.source) {
+        //     this.source = this.context
+        //         .createMediaElementSource(this.element);
 
-            this.source.connect(this.context.destination);
-        }
+        //     this.source.connect(this.context.destination);
+        // }
     };
 
     play = () => {

@@ -1,5 +1,3 @@
-
-
 require('smoothscroll-polyfill').polyfill();
 
 import * as React from 'react';
@@ -55,3 +53,5 @@ const main = () => {
 };
 
 ReactDOM.render(<Main />, document.querySelector('#app'), main);
+
+export default { main, Main, App }

@@ -5,6 +5,7 @@ import {
     JSONPlugin,
     SVGPlugin,
     UglifyJSPlugin,
+    // QuantumPlugin,
     WebIndexPlugin
 } from 'fuse-box';
 import { MochaRunner } from './MochaRunner';
@@ -61,11 +62,16 @@ const fuse = FuseBox.init({
         }),
         JSONPlugin(),
         SVGPlugin(),
-        tests && new MochaRunner(mochaGlob, mochaOptions, mochaBundles),
+        tests && new MochaRunner(mochaGlob, mochaOptions, mochaBundles) as any,
+        // prod && QuantumPlugin({
+            // removeExportsInterop: false,
+            // bakeApiIntoBundle: 'app'
+            // uglify: true
+        // }),
         prod && UglifyJSPlugin({
             mangle: {
                 toplevel: true,
-                ie8: true
+                ie8: false
             }
         })
     ]
