@@ -68,7 +68,7 @@ export const View = C(({ classes, actions, mixId }) => (
                                 </a>
                             </Grid>
                             <Grid item>
-                                <a href="https://soundcloud.com/dave-439736476" target="_blank">
+                                <a href="https://soundcloud.com/xdavehome" target="_blank">
                                     <CustomIcon
                                         src={soundcloud}
                                         title="Check out my SoundCloud!"
