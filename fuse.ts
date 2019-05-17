@@ -58,7 +58,7 @@ const fuse = FuseBox.init({
         WebIndexPlugin({
             template,
             title: 'MixQueue',
-            path: prod ? '/mixqueue' : undefined
+            // path: prod ? '/mixqueue' : undefined
         }),
         JSONPlugin(),
         SVGPlugin(),
