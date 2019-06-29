@@ -13,7 +13,8 @@ export const ViewModel = (state: State, actions: typeof Controller, props: Props
     actions,
     preload: (mixes: MixSearchResult[]) => async () => {
         if (mixes.length === 0) {
-            return await actions.search({ q: '"Dave Gradwell" Mix' });
+            const q = `(title:mix OR title:guestmix) AND (creator:"David Gradwell" OR creator:"Dave Gradwell")`;
+            return await actions.search({ q });
         }
         return '';
     }
