@@ -13,7 +13,9 @@ export const ViewModel = (state: State, actions: typeof Controller, props: Props
     actions,
     preload: (mixes: MixSearchResult[]) => async () => {
         if (mixes.length === 0) {
-            const q = `(title:mix OR title:guestmix) AND (creator:"David Gradwell" OR creator:"Dave Gradwell")`;
+            const title = `title:mix OR title:guestmix OR title:best`;
+            const creator = `creator:"David Gradwell" OR creator:"Dave Gradwell"`;
+            const q = `(${title}) AND (${creator})`;
             return await actions.search({ q });
         }
         return '';
