@@ -1,67 +1,72 @@
-export type StyleProps = {
-    peaks: string;
-}
+import { Theme } from "@material-ui/core";
 
-export const styles = {
+// export type StyleProps = {
+//     peaks: string;
+// }
+
+export const styles = (_theme: Theme) =>
+  ({
     peaksContainer: {
-        position: 'relative',
-        width: '100%',
-        height: '80px',
-        background: {
-            color: 'rgba(0,43,89,0.75)'
-        }
+      position: "relative",
+      width: "100%",
+      height: "80px",
+      backgroundColor: "rgba(0,43,89,0.75)",
     },
     peaks: {
-        backgroundRepeat: 'no-repeat',
-        backgroundSize: '100% 100%',
-        width: '100%',
+      backgroundRepeat: "no-repeat",
+      backgroundSize: "100% 100%",
+      width: "100%",
     },
     controlsContainer: {
-        position: 'absolute',
-        height: '100%'
+      position: "absolute",
+      height: "100%",
     },
     controls: {
-        position: 'absolute',
-        top: 'calc(50% - 10px)',
-        height: '20px',
-        '& svg': {
-            color: '#fff'
-        },
-        '& button': {
-            height: '20px'
-        }
+      position: "absolute",
+      top: "calc(50% - 10px)",
+      height: "20px",
+      "& svg": {
+        color: "#fff",
+      },
+      "& button": {
+        height: "20px",
+      },
     },
     playbackPosition: {
-        position: 'absolute',
-        borderLeft: '1px dashed white',
-        height: '100%',
+      position: "absolute",
+      borderLeft: "1px dashed white",
+      height: "100%",
     },
     time: {
-        color: 'rgba(255, 255, 255,0.6)',
-        fontFamily: 'monospace',
-        fontSize: '9px'
+      color: "rgba(255, 255, 255,0.6)",
+      fontFamily: "monospace",
+      fontSize: "9px",
     },
     currentTime: {
-        composes: '$time',
-        position: 'absolute',
-        bottom: '0px',
+      color: "rgba(255, 255, 255,0.6)",
+      fontFamily: "monospace",
+      fontSize: "9px",
+      position: "absolute",
+      bottom: "0px",
     },
     duration: {
-        composes: '$time',
-        position: 'absolute',
-        bottom: '0px',
-        right: '0px',
+      color: "rgba(255, 255, 255,0.6)",
+      fontFamily: "monospace",
+      fontSize: "9px",
+      position: "absolute",
+      bottom: "0px",
+      right: "0px",
     },
     posSelector: {
-        position: 'absolute',
-        borderLeft: '1px dotted white',
-        height: '100%'
+      position: "absolute",
+      borderLeft: "1px dotted white",
+      height: "100%",
     },
     posSelectTime: {
-        composes: '$time',
-        position: 'absolute',
-        top: 'calc(50% - 4.5px)',
-        fontFamily: 'monospace',
-        fontSize: '9px'
-    }
-};
+      color: "rgba(255, 255, 255,0.6)",
+      fontFamily: "monospace",
+      fontSize: "9px",
+      position: "absolute",
+      top: "calc(50% - 4.5px)",
+    },
+  } as const);

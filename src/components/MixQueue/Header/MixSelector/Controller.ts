@@ -1,7 +1,7 @@
-import * as archiveActions from '../../../../actions/archive';
-import * as uiActions from '../../../../actions/ui';
+import * as archiveActions from "../../../../actions/archive";
+import * as uiActions from "../../../../actions/ui";
 
 export const Controller = {
-    search: archiveActions.search,
-    mixListToggle: uiActions.mixListToggle
+  search: archiveActions.search,
+  mixListToggle: uiActions.mixListToggle,
 };

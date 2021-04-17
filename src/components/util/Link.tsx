@@ -1,35 +1,36 @@
-import * as React from 'react';
-import { injectCSS } from '../../util/jss';
-import { NavLink as RouterLink } from 'react-router-dom';
-import { Sheet } from "react-jss";
+import { makeStyles } from "@material-ui/core";
+import * as React from "react";
+import { NavLink as RouterLink } from "react-router-dom";
 
-type Props = Sheet<typeof styles> & {
-    to: string
-    color?: string;
+type Props = {
+  to: string;
+  color?: string;
 };
 
-const styles = {
-    link: {
-        color: ({ color }: { color?: string }) => color || '#fff',
-        textDecoration: 'none',
-        '& :visited': {
-            'text-decoration': 'none'
-        }
+const useStyles = makeStyles({
+  link: {
+    color: ({ color }: { color?: string }) => color || "#fff",
+    textDecoration: "none",
+    "& :visited": {
+      "text-decoration": "none",
     },
-    active: {
-        fontWeight: 'bold'
-    }
-}
+  },
+  active: {
+    fontWeight: "bold",
+  },
+});
 
-type Type = React.SFC<Props>;
-const Link: Type = ({ children, to, classes }) => (
+const Link: React.FunctionComponent<Props> = (props) => {
+  const classes = useStyles(props);
+  return (
     <RouterLink
-        to={to}
-        className={classes.link}
-        activeClassName={classes.active}
+      to={props.to}
+      className={classes.link}
+      activeClassName={classes.active}
     >
-        {children}
+      {props.children}
     </RouterLink>
-);
+  );
+};
 
-export default injectCSS(styles)(Link);
+export default Link;

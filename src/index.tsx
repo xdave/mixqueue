@@ -1,57 +1,48 @@
-require('smoothscroll-polyfill').polyfill();
+require("smoothscroll-polyfill").polyfill();
 
-import * as React from 'react';
-import * as ReactDOM from 'react-dom';
-import * as tap from 'react-tap-event-plugin';
-import { Provider } from 'react-redux';
-import { Route, Switch } from "react-router-dom";
-import { ConnectedRouter } from 'react-router-redux';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import { configureStore, history } from './store';
-import * as musicActions from './actions/music'
+import React from "react";
+import ReactDOM from "react-dom";
+import { Provider } from "react-redux";
+import { HashRouter, Route, Switch } from "react-router-dom";
+import { configureStore } from "./store";
+import * as musicActions from "./actions/music";
 import { music } from "./util/music";
-import theme from './util/theme';
-import MixQueue from './components/MixQueue';
+import MixQueue from "./components/MixQueue";
+import { CssBaseline } from "@material-ui/core";
 
 declare const window: {
-    __MIXQUEUE_INIT__: boolean;
+  __MIXQUEUE_INIT__: boolean;
 };
 
 const store = configureStore();
 
-class App extends React.Component<{}, void> {
-    render() {
-        return (
-            <MuiThemeProvider theme={theme}>
-                <Provider store={store}>
-                    <ConnectedRouter history={history}>
-                        <div>
-                            {this.props.children}
-                        </div>
-                    </ConnectedRouter>
-                </Provider>
-            </MuiThemeProvider>
-        );
-    }
-}
+const App: React.FunctionComponent = (props) => (
+  <Provider store={store}>
+    <HashRouter>
+      <div>{props.children}</div>
+    </HashRouter>
+  </Provider>
+);
 
 const Main = () => (
+  <React.Fragment>
+    <CssBaseline />
     <App>
-        <Switch>
-            <Route exact path="/" component={MixQueue} />
-            <Route path="/:mixId" component={MixQueue} />
-        </Switch>
+      <Switch>
+        <Route exact path="/" component={MixQueue} />
+        <Route path="/:mixId" component={MixQueue} />
+      </Switch>
     </App>
+  </React.Fragment>
 );
 
 const main = () => {
-    if (!window.__MIXQUEUE_INIT__) {
-        tap();
-        store.dispatch(musicActions.setControl({ control: music }));
-        window.__MIXQUEUE_INIT__ = true;
-    }
+  if (!window.__MIXQUEUE_INIT__) {
+    store.dispatch(musicActions.setControl({ control: music }));
+    window.__MIXQUEUE_INIT__ = true;
+  }
 };
 
-ReactDOM.render(<Main />, document.querySelector('#app'), main);
+ReactDOM.render(<Main />, document.querySelector("#app"), main);
 
-export default { main, Main, App }
+export default { main, Main, App };

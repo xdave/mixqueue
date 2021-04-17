@@ -1,36 +1,21 @@
 {
-    "compilerOptions": {
-        "target": "es5",
-        "module": "commonjs",
-        "allowJs": true,
-        "checkJs": true,
-        "strict": true,
-        "importHelpers": true,
-        "experimentalDecorators": true,
-        "downlevelIteration": true,
-        "jsx": "react",
-        "lib": ["dom", "esnext"],
-        "sourceMap": true,
-        "allowSyntheticDefaultImports": true,
-        "noUnusedLocals": true,
-        "noUnusedParameters": true,
-        "typeRoots": [
-            "node_modules/@types",
-            "typings"
-        ]
-    },
-    "include": [
-        "src",
-        "test",
-        "typings",
-        "fuse.ts",
-        "MochaRunner.ts",
-        "gentracklist.ts",
-        "updateManifest.ts"
-    ],
-    "exclude": [
-        "node_modules",
-        "node_modules/preact/**/*.d.ts"
-    ],
-    "compileOnSave": false
+  "compilerOptions": {
+    "target": "es5",
+    "module": "commonjs",
+    "allowJs": true,
+    "checkJs": true,
+    "strict": true,
+    "importHelpers": true,
+    "experimentalDecorators": true,
+    "downlevelIteration": true,
+    "jsx": "react",
+    "lib": ["dom", "esnext"],
+    "sourceMap": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "typeRoots": ["node_modules/@types", "typings"]
+  },
+  "include": ["src", "typings"]
 }

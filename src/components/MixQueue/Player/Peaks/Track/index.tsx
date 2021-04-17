@@ -1,27 +1,24 @@
-import * as React from 'react';
-import { connect } from 'react-redux';
-import withWidth from 'material-ui/utils/withWidth';
-import { injectCSS } from '../../../../../util/jss';
+import { makeStyles, withWidth } from "@material-ui/core";
+import * as React from "react";
+import { useSelector } from "react-redux";
+import { State } from "../../../../../types";
 import { qXFromPos } from "../../../../../util/player";
-import { styles } from './styles';
+import { Props } from "./Model";
+import { styles } from "./styles";
 
-import { Model } from './Model';
-import { Controller } from './Controller';
-import { ViewModel } from './ViewModel';
+const useStyles = makeStyles(styles);
 
-const C = connect(Model, Controller, ViewModel);
+const View: React.FunctionComponent<Props> = ({ track }) => {
+  const duration = useSelector<State, number>((state) => state.music.duration);
+  const classes = useStyles();
+  return (
+    <div
+      className={classes.track}
+      style={{ left: qXFromPos(".peaks", track.time, duration) }}
+    >
+      <span className={classes.number}>{track.number}</span>
+    </div>
+  );
+};
 
-const View = C(({ classes, track, music }) => {
-    return (
-        <div
-            className={classes.track}
-            style={{ left: qXFromPos('.peaks', track.time, music.duration) }}
-        >
-            <span className={classes.number}>
-                {track.number}
-            </span>
-        </div>
-    )
-});
-
-export default withWidth()(injectCSS(styles)(View))
+export default withWidth()(View);

@@ -1,23 +1,33 @@
-import * as React from 'react';
-import { connect } from 'react-redux';
-import IconButton from 'material-ui/IconButton';
+import { IconButton } from "@material-ui/core";
+import { Pause, PlayArrow } from "@material-ui/icons";
+import * as React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { bindActionCreators } from "redux";
+import { getMixById } from "../../../../selectors/archive";
+import { MixInfo, State } from "../../../../types";
+import { Controller } from "./Controller";
+import { Props } from "./Model";
 
-const PlayArrow = require('material-ui-icons/PlayArrow').default;
-const Pause = require('material-ui-icons/Pause').default;
+const Controls: React.FunctionComponent<Props> = (props) => {
+  const playing = useSelector<State, boolean>((state) => state.music.playing);
+  const mix = useSelector<State, MixInfo | undefined>((state) =>
+    getMixById(state, props.mixId)
+  );
+  const actions = bindActionCreators(Controller, useDispatch());
 
-import { Model } from './Model';
-import { Controller } from './Controller';
-import { ViewModel } from './ViewModel';
+  const play = () => {
+    if (mix) {
+      actions.play();
+    }
+  };
 
-const C = connect(Model, Controller, ViewModel);
-
-export default C(({ playing, className, play, pause }) => (
-    <div className={className}>
-        <IconButton>
-            {playing
-                ? <Pause onClick={pause} />
-                : <PlayArrow onClick={play} />
-            }
-        </IconButton>
+  return (
+    <div className={props.className}>
+      <IconButton onClick={playing ? actions.pause : play}>
+        {playing ? <Pause /> : <PlayArrow />}
+      </IconButton>
     </div>
-));
+  );
+};
+
+export default Controls;

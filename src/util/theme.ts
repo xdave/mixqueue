@@ -1,5 +1,4 @@
-const { createMuiTheme } = require('material-ui/styles');
-// const createPalette = require('material-ui/styles/palette').default;
+import { createMuiTheme } from "@material-ui/core";
 
-export const theme = createMuiTheme({}) as MaterialUI.MuiTheme;
+export const theme = createMuiTheme();
 export default theme;

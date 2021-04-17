@@ -1,14 +1,16 @@
-import theme from '../../../../util/theme';
+import theme from "../../../../util/theme";
 
-export default {
+export default () =>
+  ({
     paper: {
-        margin: `${theme.spacing.unit}px`,
-        padding: `${theme.spacing.unit}px`
+      margin: `${theme.spacing()}px`,
+      padding: `${theme.spacing()}px`,
     },
     tracklist: {
-        composes: '$paper'
+      // margin: `${theme.spacing()}px`,
+      // padding: `${theme.spacing()}px`,
     },
     track: {
-        fontWeight: 'bold'
-    }
-};
+      fontWeight: "bold",
+    },
+  } as const);

@@ -1,40 +1,104 @@
-import * as React from 'react';
-import { connect } from "react-redux";
-import withWidth from 'material-ui/utils/withWidth';
-import Button from 'material-ui/Button';
-import Typography from 'material-ui/Typography';
-import { injectCSS } from "../../../../util/jss";
+import {
+  Button,
+  makeStyles,
+  Menu,
+  MenuItem,
+  Typography,
+} from "@material-ui/core";
+import classNames from "classnames";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { bindActionCreators } from "redux";
+import { getMixById, getMixes } from "../../../../selectors/archive";
+import { MixInfo, MixSearchResult, State } from "../../../../types";
+import Link from "../../../util/Link";
+import ScrollToItem from "../../../util/ScrollToItem";
+import { useWidth } from "../../../util/use-width.hook";
+import { Controller } from "./Controller";
+import { Props } from "./Model";
+import styles from "./Stylesheet";
 
-import styles from './Stylesheet';
-import { Model } from './Model';
-import { Controller } from './Controller';
-import { ViewModel } from './ViewModel';
+const useStyles = makeStyles(styles);
 
-const C = connect(Model, Controller, ViewModel);
+export const View: React.FunctionComponent<Props> = (props) => {
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+  const mixes = useSelector<State, MixSearchResult[]>((state) =>
+    getMixes(state)
+  );
+  const mix = useSelector<State, MixInfo | undefined>((state) =>
+    getMixById(state, props.mixId)
+  );
+  const title = mix ? mix.metadata.title : "Select a mix...";
+  const actions = bindActionCreators(Controller, useDispatch());
+  const classes = useStyles(props);
+  const width = useWidth();
 
-export const View = C(({ mix, actions, width }) => {
-    const title = mix ? mix.metadata.title : 'Select a mix...';
+  const handleOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+    actions.mixListToggle({ value: true });
+  };
 
-    return (
-        <Button
-            raised
-            primary
-            tabIndex={`0` as any}
-            onClick={() => actions.mixListToggle({ value: true })}
-            onBlur={() => {
-                setTimeout(() =>{
-                    actions.mixListToggle({ value: false });
-                }, 222);
-            }}
+  const handleClose = () => {
+    setAnchorEl(null);
+    actions.mixListToggle({ value: false });
+  };
+
+  useEffect(() => {
+    const title = `title:mix OR title:guestmix OR title:best`;
+    const creator = `creator:"David Gradwell" OR creator:"Dave Gradwell"`;
+    const q = `(${title}) AND (${creator})`;
+    actions.search({ q });
+  }, [mixes.length === 0]);
+
+  return (
+    <div>
+      <Button
+        variant="outlined"
+        // color="primary"
+        tabIndex={`0` as any}
+        aria-controls="mix-menu"
+        aria-haspopup="true"
+        onClick={handleOpen}
+      >
+        <Typography
+          variant={width === "xs" ? "caption" : "body2"}
+          className={classes.title}
         >
-            <Typography
-                type={width == 'xs' ? 'caption' : 'body2'}
-                colorInherit
+          {title}
+        </Typography>
+      </Button>
+      <Menu
+        id="mix-menu"
+        anchorEl={anchorEl}
+        keepMounted
+        open={Boolean(anchorEl)}
+        onClose={handleClose}
+      >
+        <ScrollToItem
+          itemSelector={classes.active}
+          setHeight={() => `${window.innerHeight / 2}px`}
+        >
+          {mixes.map((mix) => (
+            <Link
+              key={`mixlink-${mix.identifier}`}
+              to={`/${mix.identifier}`}
+              color="#000"
             >
-                {title}
-            </Typography>
-        </Button>
-    )
-});
+              <MenuItem
+                key={`mixlink-${mix.identifier}`}
+                onClick={handleClose}
+                className={classNames({
+                  [classes.active]: props.mixId === mix.identifier,
+                })}
+              >
+                {mix.title}
+              </MenuItem>
+            </Link>
+          ))}
+        </ScrollToItem>
+      </Menu>
+    </div>
+  );
+};
 
-export default withWidth()(injectCSS(styles)(View));
+export default View;

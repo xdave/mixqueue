@@ -1,16 +1,17 @@
-import theme from '../../../util/theme';
+import { Theme } from "@material-ui/core";
 
-export const styles = {
+export const styles = (theme: Theme) =>
+  ({
     paper: {
-        position: 'relative',
-        margin: `${theme.spacing.unit}px`,
-        padding: `${theme.spacing.unit}px`
+      position: "relative",
+      margin: `${theme.spacing()}px`,
+      padding: `${theme.spacing()}px`,
     },
     tracklist: {
-        height: '175px',
-        overflowY: 'scroll'
+      height: "175px",
+      overflowY: "scroll",
     },
     track: {
-        fontWeight: 'bold'
-    }
-}
+      fontWeight: "bold",
+    },
+  } as const);

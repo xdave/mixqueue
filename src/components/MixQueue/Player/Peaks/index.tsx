@@ -1,76 +1,93 @@
-import * as React from 'react';
-import * as classNames from 'classnames';
-import { connect } from 'react-redux';
-import { injectCSS } from '../../../../util/jss';
-import { setPosFromX, secondsToTime2, qXFromPos, getTimeFromX } from "../../../../util/player";
-import Controls from '../Controls';
-import Track from './Track';
+import { makeStyles } from "@material-ui/core";
+import classNames from "classnames";
+import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { bindActionCreators } from "redux";
+import { getPeaks, getTracks } from "../../../../selectors/archive";
+import { State, Track as TrackType, UI } from "../../../../types";
+import {
+  getTimeFromX,
+  qXFromPos,
+  secondsToTime2,
+  setPosFromX,
+} from "../../../../util/player";
+import Controls from "../Controls";
+import { Controller } from "./Controller";
+import { Props } from "./Model";
+import { styles } from "./styles";
+import Track from "./Track";
 
-import { styles } from './styles';
-import { Model } from './Model';
-import { Controller } from './Controller';
-import { ViewModel } from './ViewModel';
+const useStyles = makeStyles(styles);
 
-const C = connect(Model, Controller, ViewModel);
+const View: React.FunctionComponent<Props> = (props) => {
+  const ui = useSelector<State, UI>((state) => state.ui);
+  const duration = useSelector<State, number>((state) => state.music.duration);
+  const currentTime = useSelector<State, number>(
+    (state) => state.music.currentTime
+  );
+  const tracks = useSelector<State, TrackType[]>((state) =>
+    getTracks(state, props.mixId)
+  );
+  const peaks = useSelector<State, string | undefined>((state) =>
+    getPeaks(state, props.mixId)
+  );
+  const actions = bindActionCreators(Controller, useDispatch());
 
-const View = C(({ classes, peaks, tracks, music, actions, mixId }) => {
-    return (
-        <div className={classes.peaksContainer}>
-            <div className={classes.controlsContainer}>
-                <div className={classes.controls}>
-                    <Controls mixId={mixId} />
-                </div>
-            </div>
-            <div style={{ display: 'flex', flexFlow: 'row', height: '100%' }}>
-                <div
-                    key={`peaks-display-${peaks}`}
-                    className={classNames(classes.peaks, 'peaks')}
-                    style={{ backgroundImage: peaks ? `url("${peaks}")` : 'none' }}
-                    onClick={setPosFromX(music.duration, actions.setTime)}
-                    onMouseEnter={() => actions.setSelectingPos({ selectingPos: true })}
-                    onMouseLeave={() => actions.setSelectingPos({ selectingPos: false })}
-                    onMouseMove={e => {
-                        const { left } = e.currentTarget.getBoundingClientRect()
-                        actions.setPosSelectionX({ posSelectX: e.clientX - left });
-                        const time = getTimeFromX(e, music.duration);
-                        actions.setPosSelectionTime({ posSelectTime: time });
-                    }}
-                >
-                    <div
-                        className={classes.playbackPosition}
-                        style={{
-                            left: qXFromPos('.peaks', music.currentTime, music.duration)
-                        }}
-                    />
+  const classes = useStyles();
 
-                    <div
-                        className={classes.posSelector}
-                        style={{
-                            display: music.selectingPos
-                                ? 'block'
-                                : 'none',
-                            left: `${music.posSelectX}px`,
-                        }}
-                    >
-                        <div className={classes.posSelectTime}>
-                            {secondsToTime2(music.posSelectTime)}
-                        </div>
-                    </div>
-
-                    {tracks.map((track, index) => (
-                        <Track key={index} track={track} />
-                    ))}
-
-                    <div className={classes.currentTime}>
-                        {secondsToTime2(music.currentTime)}
-                    </div>
-                    <div className={classes.duration}>
-                        {secondsToTime2(music.duration)}
-                    </div>
-                </div>
-            </div>
+  return (
+    <div className={classes.peaksContainer}>
+      <div className={classes.controlsContainer}>
+        <div className={classes.controls}>
+          <Controls mixId={props.mixId} />
         </div>
-    )
-});
+      </div>
+      <div style={{ display: "flex", flexFlow: "row", height: "100%" }}>
+        <div
+          key={`peaks-display-${peaks}`}
+          className={classNames(classes.peaks, "peaks")}
+          style={{ backgroundImage: peaks ? `url("${peaks}")` : "none" }}
+          onClick={setPosFromX(duration, actions.setTime)}
+          onMouseEnter={() => actions.setSelectingPos({ selectingPos: true })}
+          onMouseLeave={() => actions.setSelectingPos({ selectingPos: false })}
+          onMouseMove={(e) => {
+            const { left } = e.currentTarget.getBoundingClientRect();
+            actions.setPosSelectionX({ posSelectX: e.clientX - left });
+            const time = getTimeFromX(e, duration);
+            actions.setPosSelectionTime({ posSelectTime: time });
+          }}
+        >
+          <div
+            className={classes.playbackPosition}
+            style={{
+              left: qXFromPos(".peaks", currentTime, duration),
+            }}
+          />
 
-export default injectCSS(styles)(View);
+          <div
+            className={classes.posSelector}
+            style={{
+              display: ui.selectingPos ? "block" : "none",
+              left: `${ui.posSelectX}px`,
+            }}
+          >
+            <div className={classes.posSelectTime}>
+              {secondsToTime2(ui.posSelectTime)}
+            </div>
+          </div>
+
+          {tracks.map((track, index) => (
+            <Track key={index} track={track} />
+          ))}
+
+          <div className={classes.currentTime}>
+            {secondsToTime2(currentTime)}
+          </div>
+          <div className={classes.duration}>{secondsToTime2(duration)}</div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default View;
