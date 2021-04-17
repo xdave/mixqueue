@@ -54,8 +54,6 @@ export const View: React.FunctionComponent<Props> = (props) => {
     <div>
       <Button
         variant="outlined"
-        // color="primary"
-        tabIndex={`0` as any}
         aria-controls="mix-menu"
         aria-haspopup="true"
         onClick={handleOpen}
@@ -64,7 +62,7 @@ export const View: React.FunctionComponent<Props> = (props) => {
           variant={width === "xs" ? "caption" : "body2"}
           className={classes.title}
         >
-          {title}
+          <b>{title}</b>
         </Typography>
       </Button>
       <Menu

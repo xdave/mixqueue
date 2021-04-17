@@ -11,6 +11,13 @@ export default () =>
       // padding: `${theme.spacing()}px`,
     },
     track: {
+      display: "flex",
+      justifyContent: "start",
+      "& span": {
+        padding: "3px",
+      },
+    },
+    activeTrack: {
       fontWeight: "bold",
     },
   } as const);

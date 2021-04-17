@@ -36,14 +36,13 @@ const View: React.FunctionComponent<Props> = (props) => {
                   key={`track-${index}-${t.title}`}
                   button
                   className={classNames({
-                    [classes.track]: t.number === track.number,
+                    [classes.track]: true,
+                    [classes.activeTrack]: t.number === track.number,
                   })}
                   onClick={() => actions.setTime({ time: t.time })}
                 >
                   <span>[{secondsToTime2(t.time)}]</span>
-                  &nbsp;
                   <span>{zeroPad(t.number)}.</span>
-                  &nbsp;
                   <span>{t.title}</span>
                 </ListItem>
               ))}
