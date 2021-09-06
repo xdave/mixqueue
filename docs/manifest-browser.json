@@ -1,15 +1,15 @@
 [
   {
-    "absPath": "/home/dave/Projects/deftproductions/mixqueue/docs/app.03f3d9258.js",
-    "browserPath": "./app.03f3d9258.js",
-    "relativePath": "app.03f3d9258.js",
+    "absPath": "/home/shared/Projects/gsmtest/mixqueue/docs/app.03f4cda08.js",
+    "browserPath": "./app.03f4cda08.js",
+    "relativePath": "app.03f4cda08.js",
     "type": "js",
     "webIndexed": true
   },
   {
-    "absPath": "/home/dave/Projects/deftproductions/mixqueue/docs/vendor.1141898a.js",
-    "browserPath": "./vendor.1141898a.js",
-    "relativePath": "vendor.1141898a.js",
+    "absPath": "/home/shared/Projects/gsmtest/mixqueue/docs/vendor.2b807c70.js",
+    "browserPath": "./vendor.2b807c70.js",
+    "relativePath": "vendor.2b807c70.js",
     "type": "js",
     "webIndexed": true
   }
