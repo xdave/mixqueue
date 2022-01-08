@@ -42,11 +42,10 @@ export const View: React.FunctionComponent<Props> = (props) => {
     setAnchorEl(null);
     actions.mixListToggle({ value: false });
   };
-
   useEffect(() => {
-    const title = `title:mix OR title:guestmix OR title:best`;
-    const creator = `creator:"David Gradwell" OR creator:"Dave Gradwell"`;
-    const q = `(${title}) AND (${creator})`;
+    const uploader = `uploader:${atob(`ZGVmdC5wcm9kdWN0aW9uc0BnbWFpbC5jb20=`)}`;
+    const mediatype = `mediatype:audio`;
+    const q = `(${uploader} AND ${mediatype})`;
     actions.search({ q });
   }, [mixes.length === 0]);
 
