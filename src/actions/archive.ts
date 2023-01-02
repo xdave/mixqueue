@@ -75,9 +75,9 @@ export const fetchMetadata = createAsync<
 
   if (!mixInfo[mixInfo.metadata.identifier]) {
     const [cue] = mixInfo.files.filter((f) => f.name.indexOf(".cue") > -1);
-    // const server = mixInfo.server.replace('us.archive', 's3dns.us.archive');
-    // const cueUrl = `https://${mixInfo.server}/${mixInfo.metadata.identifier}/${cue.name}`;
-    const cueUrl = `https://api.allorigins.win/raw?url=https://${mixInfo.server}${mixInfo.dir}/${cue.name}`;
+    // const cueUrl = `https://${mixInfo.server}${mixInfo.dir}/${cue.name}`;
+    // const cueUrl = `https://archive.org/download/${mixInfo.metadata.identifier}/${cue.name}`;
+    const cueUrl = `https://api.codetabs.com/v1/proxy?quest=http://archive.org/download/${mixInfo.metadata.identifier}/${cue.name}`;
     const cueRes = await fetch(cueUrl);
     const cueTxt = await cueRes.text();
 

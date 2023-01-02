@@ -50,7 +50,11 @@ export const getAudioUrls = (mix?: MixInfo) =>
         .sort((a) => (/m4a$/i.test(a.name) ? -1 : 1))
         .sort((a) => (/mp3$/i.test(a.name) ? -1 : 1))
         .sort((a) => (/ogg$/i.test(a.name) ? -1 : 1))
-        .map((f) => `https://${mix.server}${mix.dir}/${f.name}`)
+        // .map((f) => `https://${mix.server}${mix.dir}/${f.name}`)
+        .map(
+          (f) =>
+            `http://archive.org/download/${mix.metadata.identifier}/${f.name}`
+        )
     : [];
 
 export const getAudioSources = createSelector(_getMixById, (mix) =>
