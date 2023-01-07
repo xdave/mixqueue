@@ -1,20 +1,11 @@
-import {
-  AppBar,
-  Grid,
-  Hidden,
-  Icon,
-  makeStyles,
-  Toolbar,
-  Typography,
-} from "@material-ui/core";
-import { LibraryMusic } from "@material-ui/icons";
-import * as React from "react";
+import { LibraryMusic } from "@mui/icons-material";
+import { AppBar, Toolbar, Grid, Hidden, Typography, Icon } from "@mui/material";
+import styled from "@mui/styles/styled";
+import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { bindActionCreators } from "redux";
 import archive from "../../../icons/archive.svg";
 import github from "../../../icons/github.svg";
-import mixcloud from "../../../icons/mixcloud.svg";
-import preact from "../../../icons/preact.svg";
 import soundcloud from "../../../icons/soundcloud.svg";
 import { getMusicElement } from "../../../selectors/music";
 import CustomIcon from "../../util/Icon";
@@ -22,9 +13,16 @@ import Link from "../../util/Link";
 import { Controller } from "./Controller";
 import MixSelector from "./MixSelector";
 import { Props } from "./Model";
-import { Stylesheet } from "./Stylesheet";
 
-const useStyles = makeStyles(Stylesheet);
+const StyledAppBar = styled(AppBar)(() => ({
+  // position: "relative",
+  // height: "45px",
+}));
+
+const StyledGrid = styled(Grid)(() => ({
+  alignItems: "center",
+  justifyContent: "space-between",
+}));
 
 export const View: React.FunctionComponent<Props> = (props) => {
   const actions = bindActionCreators(Controller, useDispatch());
@@ -34,12 +32,11 @@ export const View: React.FunctionComponent<Props> = (props) => {
     el.src = "";
     actions.loadedMetadata({ duration: 0 });
   };
-  const classes = useStyles();
 
   return (
-    <AppBar position="static" className={classes.appBar}>
+    <StyledAppBar position="static" sx={{ backgroundColor: "#3f51b5" }}>
       <Toolbar>
-        <Grid container className={classes.gridContainer}>
+        <StyledGrid container>
           <Hidden only={["xs"]}>
             <Grid item onClick={unload}>
               <Link to={`/`}>
@@ -73,29 +70,11 @@ export const View: React.FunctionComponent<Props> = (props) => {
                   </a>
                 </Grid>
                 <Grid item>
-                  <a href="https://www.mixcloud.com/xdavehome/" target="_blank">
-                    <CustomIcon
-                      src={mixcloud}
-                      title="More on Mixcloud!"
-                      alt="Mixcloud"
-                    />
-                  </a>
-                </Grid>
-                <Grid item>
                   <a href="https://soundcloud.com/xdavehome" target="_blank">
                     <CustomIcon
                       src={soundcloud}
                       title="Check out my SoundCloud!"
                       alt="SoundCloud"
-                    />
-                  </a>
-                </Grid>
-                <Grid item>
-                  <a href="https://preactjs.com/" target="_blank">
-                    <CustomIcon
-                      src={preact}
-                      title="Powered by Preact"
-                      alt="Preact"
                     />
                   </a>
                 </Grid>
@@ -111,9 +90,9 @@ export const View: React.FunctionComponent<Props> = (props) => {
               </Grid>
             </Grid>
           </Hidden>
-        </Grid>
+        </StyledGrid>
       </Toolbar>
-    </AppBar>
+    </StyledAppBar>
   );
 };
 

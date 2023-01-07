@@ -1,5 +1,4 @@
-import { makeStyles } from "@material-ui/core";
-import classNames from "classnames";
+import { styled } from "@mui/material/styles";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -14,10 +13,74 @@ import {
 import Controls from "../Controls";
 import { Controller } from "./Controller";
 import { Props } from "./Model";
-import { styles } from "./styles";
 import Track from "./Track";
 
-const useStyles = makeStyles(styles);
+const PeaksContainer = styled("div")(() => ({
+  position: "relative",
+  width: "100%",
+  height: "80px",
+  backgroundColor: "rgba(0,43,89,0.75)",
+}));
+
+const ControlsContainer = styled("div")(() => ({
+  position: "absolute",
+  height: "100%",
+}));
+
+const ControlsWrapper = styled("div")(() => ({
+  position: "absolute",
+  top: "calc(50% - 10px)",
+  height: "20px",
+  "& svg": {
+    color: "#fff",
+  },
+  "& button": {
+    height: "20px",
+  },
+}));
+
+const Peaks = styled("div")(() => ({
+  backgroundRepeat: "no-repeat",
+  backgroundSize: "100% 100%",
+  width: "100%",
+}));
+
+const PlaybackPosition = styled("div")(() => ({
+  position: "absolute",
+  borderLeft: "1px dashed white",
+  height: "100%",
+}));
+
+const PosSelector = styled("div")(() => ({
+  position: "absolute",
+  borderLeft: "1px dotted white",
+  height: "100%",
+}));
+
+const PosSelectTime = styled("div")(() => ({
+  color: "rgba(255, 255, 255,0.6)",
+  fontFamily: "monospace",
+  fontSize: "9px",
+  position: "absolute",
+  top: "calc(50% - 4.5px)",
+}));
+
+const CurrentTime = styled("div")(() => ({
+  color: "rgba(255, 255, 255,0.6)",
+  fontFamily: "monospace",
+  fontSize: "9px",
+  position: "absolute",
+  bottom: "0px",
+}));
+
+const Duration = styled("div")(() => ({
+  color: "rgba(255, 255, 255,0.6)",
+  fontFamily: "monospace",
+  fontSize: "9px",
+  position: "absolute",
+  bottom: "0px",
+  right: "0px",
+}));
 
 const View: React.FunctionComponent<Props> = (props) => {
   const ui = useSelector<State, UI>((state) => state.ui);
@@ -33,19 +96,17 @@ const View: React.FunctionComponent<Props> = (props) => {
   );
   const actions = bindActionCreators(Controller, useDispatch());
 
-  const classes = useStyles();
-
   return (
-    <div className={classes.peaksContainer}>
-      <div className={classes.controlsContainer}>
-        <div className={classes.controls}>
+    <PeaksContainer>
+      <ControlsContainer>
+        <ControlsWrapper>
           <Controls mixId={props.mixId} />
-        </div>
-      </div>
+        </ControlsWrapper>
+      </ControlsContainer>
       <div style={{ display: "flex", flexFlow: "row", height: "100%" }}>
-        <div
+        <Peaks
           key={`peaks-display-${peaks}`}
-          className={classNames(classes.peaks, "peaks")}
+          className="peaks"
           style={{ backgroundImage: peaks ? `url("${peaks}")` : "none" }}
           onClick={setPosFromX(duration, actions.setTime)}
           onMouseEnter={() => actions.setSelectingPos({ selectingPos: true })}
@@ -57,36 +118,30 @@ const View: React.FunctionComponent<Props> = (props) => {
             actions.setPosSelectionTime({ posSelectTime: time });
           }}
         >
-          <div
-            className={classes.playbackPosition}
+          <PlaybackPosition
             style={{
               left: qXFromPos(".peaks", currentTime, duration),
             }}
           />
 
-          <div
-            className={classes.posSelector}
+          <PosSelector
             style={{
               display: ui.selectingPos ? "block" : "none",
               left: `${ui.posSelectX}px`,
             }}
           >
-            <div className={classes.posSelectTime}>
-              {secondsToTime2(ui.posSelectTime)}
-            </div>
-          </div>
+            <PosSelectTime>{secondsToTime2(ui.posSelectTime)}</PosSelectTime>
+          </PosSelector>
 
           {tracks.map((track, index) => (
             <Track key={index} track={track} />
           ))}
 
-          <div className={classes.currentTime}>
-            {secondsToTime2(currentTime)}
-          </div>
-          <div className={classes.duration}>{secondsToTime2(duration)}</div>
-        </div>
+          <CurrentTime>{secondsToTime2(currentTime)}</CurrentTime>
+          <Duration>{secondsToTime2(duration)}</Duration>
+        </Peaks>
       </div>
-    </div>
+    </PeaksContainer>
   );
 };
 

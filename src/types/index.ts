@@ -126,3 +126,31 @@ export interface State {
 }
 
 export type Thunk = ThunkAction<void, State, void, AnyAction>;
+
+export interface ITags extends Record<string, string> {}
+
+export interface IChapter {
+  id: number;
+  time_base: string;
+  start: number;
+  start_time: string;
+  end: number;
+  end_time: string;
+  tags: ITags;
+}
+
+export interface IMetadata {
+  chapters: IChapter[];
+  format: {
+    filename: string;
+    nb_streams: number;
+    nb_programs: number;
+    format_name: string;
+    format_long_name: string;
+    duration: string;
+    size: string;
+    bit_rate: string;
+    probe_score: number;
+    tags: ITags;
+  };
+}

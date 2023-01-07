@@ -1,23 +1,19 @@
-import { makeStyles, Paper } from "@material-ui/core";
+import { Paper } from "@mui/material";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useRouteMatch } from "react-router-dom";
+import { useMatch } from "react-router-dom";
 import { bindActionCreators } from "redux";
 import { getAudioUrls, getMixById } from "../../../selectors/archive";
 import { getMusicElement, getPlayableUrl } from "../../../selectors/music";
 import { MixInfo, State } from "../../../types";
 import { Controller } from "./Controller";
-import { Props } from "./Model";
 import Peaks from "./Peaks";
-import { styles } from "./styles";
 import Tracklist from "./Tracklist";
 
-const useStyles = makeStyles(styles);
-
 const View = () => {
-  const match = useRouteMatch<Props>();
+  const match = useMatch("/:mixId");
   const mix = useSelector<State, MixInfo | undefined>((state) =>
-    getMixById(state, match.params.mixId)
+    getMixById(state, match?.params.mixId!)
   );
   const el = useSelector(getMusicElement);
   const urls = getAudioUrls(mix);
@@ -27,21 +23,19 @@ const View = () => {
   const actions = bindActionCreators(Controller, useDispatch());
 
   useEffect(() => {
-    actions.fetchMetadata({ id: match.params.mixId });
-  }, [match.params.mixId]);
+    actions.fetchMetadata({ id: match?.params.mixId! });
+  }, [match?.params.mixId]);
 
   useEffect(() => {
     actions.setSrc({ src: url });
   }, [url]);
 
-  const classes = useStyles();
-
   return (
     <div>
-      <Paper className={classes.paper}>
-        <Peaks mixId={match.params.mixId} />
+      <Paper sx={{ position: "relative", margin: 1, padding: 1 }}>
+        <Peaks mixId={match?.params.mixId!} />
       </Paper>
-      <Tracklist mixId={match.params.mixId} />
+      <Tracklist mixId={match?.params.mixId!} />
     </div>
   );
 };

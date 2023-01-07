@@ -1,5 +1,5 @@
-import { IconButton } from "@material-ui/core";
-import { Pause, PlayArrow } from "@material-ui/icons";
+import { IconButton } from "@mui/material";
+import { Pause, PlayArrow } from "@mui/icons-material";
 import * as React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { bindActionCreators } from "redux";

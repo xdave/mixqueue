@@ -1,8 +1,6 @@
-import { Action, Middleware, Reducer, Store } from "redux";
+import { Middleware, Reducer, Store } from "redux";
 import { compose, createStore, applyMiddleware } from "redux";
 import thunk from "redux-thunk";
-// import { routerMiddleware } from "react-router-redux";
-// import { createHashHistory as createHistory } from "history";
 import { State } from "../types";
 import { MusicControl } from "../util/music";
 import { createReducer } from "../reducers";
@@ -38,15 +36,15 @@ const getDevMiddleware = (): Middleware[] =>
     ? []
     : [
         // require("redux-immutable-state-invariant").default(),
-        require("redux-logger").createLogger({
-          level: "info",
-          collapsed: true,
-          diff: true,
-          predicate: (_: State, action: Action) =>
-            [/TIME_UPDATE/, /SELECTION/, /SELECTING/].every(
-              (t) => !t.test(action.type)
-            ),
-        }),
+        // require("redux-logger").createLogger({
+        //   level: "info",
+        //   collapsed: true,
+        //   diff: true,
+        //   predicate: (_: State, action: Action) =>
+        //     [/TIME_UPDATE/, /SELECTION/, /SELECTING/].every(
+        //       (t) => !t.test(action.type)
+        //     ),
+        // }),
       ];
 
 export const injectAsyncReducer = (

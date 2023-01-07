@@ -1,14 +1,14 @@
 import React from "react";
+import { useMatch } from "react-router";
 import Header from "./Header";
 import Player from "./Player";
-import { Route, useRouteMatch } from "react-router-dom";
 
 const Index: React.FunctionComponent = () => {
-  const match = useRouteMatch<{ mixId: string }>();
+  const match = useMatch("/:mixId");
   return (
     <div>
-      <Header mixId={match.params.mixId} />
-      <Route exact path={`/:mixId`} component={Player} />
+      <Header mixId={match?.params.mixId!} />
+      <Player />
     </div>
   );
 };

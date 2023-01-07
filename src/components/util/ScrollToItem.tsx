@@ -1,7 +1,7 @@
 import React from "react";
 import { findDOMNode } from "react-dom";
 
-export interface Props {
+export interface Props extends React.PropsWithChildren {
   id?: string;
   className?: string;
   style?: any;

@@ -1,14 +1,13 @@
-require("smoothscroll-polyfill").polyfill();
-
 import React from "react";
-import ReactDOM from "react-dom";
+import { createRoot } from "react-dom/client";
 import { Provider } from "react-redux";
-import { HashRouter, Route, Switch } from "react-router-dom";
+import { createHashRouter, RouterProvider } from "react-router-dom";
 import { configureStore } from "./store";
 import * as musicActions from "./actions/music";
 import { music } from "./util/music";
 import MixQueue from "./components/MixQueue";
-import { CssBaseline } from "@material-ui/core";
+import { CssBaseline, ThemeProvider } from "@mui/material";
+import theme from "./util/theme";
 
 declare const window: {
   __MIXQUEUE_INIT__: boolean;
@@ -16,24 +15,26 @@ declare const window: {
 
 const store = configureStore();
 
-const App: React.FunctionComponent = (props) => (
-  <Provider store={store}>
-    <HashRouter>
-      <div>{props.children}</div>
-    </HashRouter>
-  </Provider>
-);
+const router = createHashRouter([
+  {
+    path: "/",
+    element: <MixQueue />,
+  },
+  {
+    path: "/:mixId",
+    element: <MixQueue />,
+  },
+]);
 
 const Main = () => (
-  <React.Fragment>
-    <CssBaseline />
-    <App>
-      <Switch>
-        <Route exact path="/" component={MixQueue} />
-        <Route path="/:mixId" component={MixQueue} />
-      </Switch>
-    </App>
-  </React.Fragment>
+  <Provider store={store}>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <React.Fragment>
+        <RouterProvider router={router} />
+      </React.Fragment>
+    </ThemeProvider>
+  </Provider>
 );
 
 const main = () => {
@@ -43,6 +44,9 @@ const main = () => {
   }
 };
 
-ReactDOM.render(<Main />, document.querySelector("#app"), main);
-
-export default { main, Main, App };
+const container = document.querySelector("#app");
+if (container) {
+  const root = createRoot(container);
+  root.render(<Main />);
+  main();
+}

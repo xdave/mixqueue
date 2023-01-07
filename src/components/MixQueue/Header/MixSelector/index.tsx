@@ -1,11 +1,4 @@
-import {
-  Button,
-  makeStyles,
-  Menu,
-  MenuItem,
-  Typography,
-} from "@material-ui/core";
-import classNames from "classnames";
+import { Button, Menu, MenuItem, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -18,8 +11,6 @@ import { Controller } from "./Controller";
 import { Props } from "./Model";
 import styles from "./Stylesheet";
 
-const useStyles = makeStyles(styles);
-
 export const View: React.FunctionComponent<Props> = (props) => {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const mixes = useSelector<State, MixSearchResult[]>((state) =>
@@ -30,7 +21,6 @@ export const View: React.FunctionComponent<Props> = (props) => {
   );
   const title = mix ? mix.metadata.title : "Select a mix...";
   const actions = bindActionCreators(Controller, useDispatch());
-  const classes = useStyles(props);
   const width = useWidth();
 
   const handleOpen = (event: React.MouseEvent<HTMLElement>) => {
@@ -49,6 +39,8 @@ export const View: React.FunctionComponent<Props> = (props) => {
     actions.search({ q });
   }, [mixes.length === 0]);
 
+  const classes = styles();
+
   return (
     <div>
       <Button
@@ -59,7 +51,7 @@ export const View: React.FunctionComponent<Props> = (props) => {
       >
         <Typography
           variant={width === "xs" ? "caption" : "body2"}
-          className={classes.title}
+          sx={classes.title}
         >
           <b>{title}</b>
         </Typography>
@@ -72,21 +64,24 @@ export const View: React.FunctionComponent<Props> = (props) => {
         onClose={handleClose}
       >
         <ScrollToItem
-          itemSelector={classes.active}
+          itemSelector={"active"}
           setHeight={() => `${window.innerHeight / 2}px`}
         >
           {mixes.map((mix) => (
             <Link
+              className={props.mixId === mix.identifier ? "active" : ""}
               key={`mixlink-${mix.identifier}`}
               to={`/${mix.identifier}`}
               color="#000"
+              isActive={props.mixId === mix.identifier}
             >
               <MenuItem
                 key={`mixlink-${mix.identifier}`}
                 onClick={handleClose}
-                className={classNames({
-                  [classes.active]: props.mixId === mix.identifier,
-                })}
+                style={{
+                  fontWeight:
+                    props.mixId === mix.identifier ? "bold" : undefined,
+                }}
               >
                 {mix.title}
               </MenuItem>
