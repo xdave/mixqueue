@@ -1,5 +1,6 @@
-import { useMediaQuery, useTheme } from "@material-ui/core";
-import { Breakpoint } from "@material-ui/core/styles/createBreakpoints";
+import { Breakpoint, Theme, useMediaQuery, useTheme } from "@mui/material";
+
+type BreakpointOrNull = Breakpoint | null;
 
 /**
  * Be careful using this hook. It only works because the number of
@@ -7,13 +8,13 @@ import { Breakpoint } from "@material-ui/core/styles/createBreakpoints";
  * breakpoints. See https://reactjs.org/docs/hooks-rules.html#only-call-hooks-at-the-top-level
  */
 export function useWidth() {
-  const theme = useTheme();
-  const keys = [...theme.breakpoints.keys].reverse();
+  const theme: Theme = useTheme();
+  const keys: readonly Breakpoint[] = [...theme.breakpoints.keys].reverse();
   return (
-    keys.reduce((output: Breakpoint, key) => {
+    keys.reduce((output: BreakpointOrNull, key: Breakpoint) => {
       // eslint-disable-next-line react-hooks/rules-of-hooks
       const matches = useMediaQuery(theme.breakpoints.up(key));
       return !output && matches ? key : output;
-    }) || "xs"
+    }, null) || "xs"
   );
 }

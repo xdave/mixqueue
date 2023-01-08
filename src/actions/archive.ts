@@ -2,8 +2,7 @@ import actionCreatorFactory from "typescript-fsa";
 import { asyncFactory } from "typescript-fsa-redux-thunk";
 import fetchP from "fetch-jsonp";
 import { fetchT } from "../util/fetchTimeout";
-import { Archive, State } from "../types";
-import { parse } from "../util/cueSheet";
+import { Archive, IMetadata, State } from "../types";
 
 const fetchOpts: RequestInit = { mode: "cors", cache: "force-cache" };
 const baseURL = "https://archive.org";
@@ -73,21 +72,19 @@ export const fetchMetadata = createAsync<
 
   const mixInfo = (await response.json()) as Archive.Metadata.Response;
 
-  if (!mixInfo[mixInfo.metadata.identifier]) {
-    const [cue] = mixInfo.files.filter((f) => f.name.indexOf(".cue") > -1);
-    // const cueUrl = `https://${mixInfo.server}${mixInfo.dir}/${cue.name}`;
-    // const cueUrl = `https://archive.org/download/${mixInfo.metadata.identifier}/${cue.name}`;
-    const cueUrl = `https://api.codetabs.com/v1/proxy?quest=http://archive.org/download/${mixInfo.metadata.identifier}/${cue.name}`;
-    const cueRes = await fetch(cueUrl);
-    const cueTxt = await cueRes.text();
+  if (mixInfo && mixInfo.files && !mixInfo[mixInfo?.metadata?.identifier]) {
+    const [file] = mixInfo.files.filter((f) => f.name.indexOf(".json") > -1);
+    const metadataUrl = `https://archive.org/download/${mixInfo.metadata.identifier}/${file.name}`;
+    const metaRes = await fetch(metadataUrl);
+    const metadata: IMetadata = await metaRes.json();
 
     mixInfo[mixInfo.metadata.identifier] = {
       id: mixInfo.metadata.identifier,
       title: mixInfo.metadata.title,
-      tracks: parse(cueTxt).tracks.map((track) => ({
-        number: track.number,
-        title: `${track.artist} - ${track.title} [${track.label}]`,
-        time: track.time,
+      tracks: metadata.chapters.map((chapter) => ({
+        number: chapter.id + 1,
+        title: chapter.tags.title,
+        time: parseFloat(chapter.start_time),
         timeDisplay: "",
       })),
     };

@@ -1,36 +1,26 @@
-import { makeStyles } from "@material-ui/core";
+import { styled } from "@mui/material/styles";
 import * as React from "react";
-import { NavLink as RouterLink } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
-type Props = {
+interface Props extends React.PropsWithChildren {
+  className?: string;
   to: string;
   color?: string;
-};
+  isActive?: boolean;
+}
 
-const useStyles = makeStyles({
-  link: {
-    color: ({ color }: { color?: string }) => color || "#fff",
+const StyledNavLink = styled(NavLink)<Props>(({ color, isActive }) => ({
+  color: color || "#fff",
+  textDecoration: "none",
+  "& :visited": {
     textDecoration: "none",
-    "& :visited": {
-      "text-decoration": "none",
-    },
   },
-  active: {
-    fontWeight: "bold",
-  },
-});
+  fontWeight: isActive ? "bold" : undefined,
+}));
 
 const Link: React.FunctionComponent<Props> = (props) => {
-  const classes = useStyles(props);
-  return (
-    <RouterLink
-      to={props.to}
-      className={classes.link}
-      activeClassName={classes.active}
-    >
-      {props.children}
-    </RouterLink>
-  );
+  const { isActive: _, ...rest } = props;
+  return <StyledNavLink {...rest}>{props.children}</StyledNavLink>;
 };
 
 export default Link;

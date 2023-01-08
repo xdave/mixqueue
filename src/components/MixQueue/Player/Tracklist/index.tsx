@@ -1,5 +1,5 @@
-import { List, ListItem, makeStyles, Paper } from "@material-ui/core";
-import classNames from "classnames";
+import { List, ListItemButton, Paper } from "@mui/material";
+import styled from "@mui/styles/styled";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -9,9 +9,16 @@ import { secondsToTime2, zeroPad } from "../../../../util/player";
 import ScrollToItem from "../../../util/ScrollToItem";
 import { Controller } from "./Controller";
 import { Props } from "./Model";
-import styles from "./styles";
 
-const useStyles = makeStyles(styles);
+const Tracklist = styled(Paper)(() => ({}));
+
+const TrackListItem = styled(ListItemButton)(() => ({
+  display: "flex",
+  justifyContent: "start",
+  "& span": {
+    padding: "3px",
+  },
+}));
 
 const View: React.FunctionComponent<Props> = (props) => {
   const track = useSelector<State, Track>((state) =>
@@ -21,35 +28,33 @@ const View: React.FunctionComponent<Props> = (props) => {
     getTracks(state, props.mixId)
   );
   const actions = bindActionCreators(Controller, useDispatch());
-  const classes = useStyles();
-  return (
-    (tracks.length > 0 && (
-      <Paper className={classes.tracklist}>
-        <ScrollToItem
-          itemSelector={classes.track}
-          setHeight={() => `${window.innerHeight - 182}px`}
-        >
-          <List>
-            {track &&
-              tracks.map((t, index) => (
-                <ListItem
-                  key={`track-${index}-${t.title}`}
-                  button
-                  className={classNames({
-                    [classes.track]: true,
-                    [classes.activeTrack]: t.number === track.number,
-                  })}
-                  onClick={() => actions.setTime({ time: t.time })}
-                >
-                  <span>[{secondsToTime2(t.time)}]</span>
-                  <span>{zeroPad(t.number)}.</span>
-                  <span>{t.title}</span>
-                </ListItem>
-              ))}
-          </List>
-        </ScrollToItem>
-      </Paper>
-    )) || <div />
+  return tracks.length > 0 ? (
+    <Tracklist>
+      <ScrollToItem
+        itemSelector={"active"}
+        setHeight={() => `${window.innerHeight - 182}px`}
+      >
+        <List>
+          {track &&
+            tracks.map((t, index) => (
+              <TrackListItem
+                key={`track-${index}-${t.title}`}
+                sx={{
+                  fontWeight: t.number === track.number ? "bold" : undefined,
+                }}
+                onClick={() => actions.setTime({ time: t.time })}
+                className={t.number === track.number ? "active" : ""}
+              >
+                <span>[{secondsToTime2(t.time)}]</span>
+                <span>{zeroPad(t.number)}.</span>
+                <span>{t.title}</span>
+              </TrackListItem>
+            ))}
+        </List>
+      </ScrollToItem>
+    </Tracklist>
+  ) : (
+    <div />
   );
 };
 

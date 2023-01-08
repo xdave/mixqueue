@@ -3,6 +3,4 @@ node_modules/
 .cache/
 .nyc_output/
 coverage/
-docs/app.js
-docs/app.js.map
-docs/vendor.js
+dist/
