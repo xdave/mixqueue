@@ -83,7 +83,7 @@ export const fetchMetadata = createAsync<
       title: mixInfo.metadata.title,
       tracks: metadata.chapters.map((chapter) => ({
         number: chapter.id + 1,
-        title: chapter.tags.title || chapter.tags.TITLE,
+        title: chapter.tags.title,
         time: parseFloat(chapter.start_time),
         timeDisplay: "",
       })),

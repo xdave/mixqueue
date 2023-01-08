@@ -13,7 +13,7 @@ const StyledNavLink = styled(NavLink)<Props>(({ color, isActive }) => ({
   color: color || "#fff",
   textDecoration: "none",
   "& :visited": {
-    "text-decoration": "none",
+    textDecoration: "none",
   },
   fontWeight: isActive ? "bold" : undefined,
 }));

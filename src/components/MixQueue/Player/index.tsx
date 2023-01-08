@@ -23,8 +23,10 @@ const View = () => {
   const actions = bindActionCreators(Controller, useDispatch());
 
   useEffect(() => {
-    actions.fetchMetadata({ id: match?.params.mixId! });
-  }, [match?.params.mixId]);
+    if (match?.params.mixId) {
+      actions.fetchMetadata({ id: match.params.mixId });
+    }
+  }, [match?.params?.mixId]);
 
   useEffect(() => {
     actions.setSrc({ src: url });

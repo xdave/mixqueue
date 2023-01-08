@@ -1,15 +1,18 @@
 {
-  "name": "example",
+  "name": "mixqueue",
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
   "scripts": {
     "dev": "vite",
-    "build": "vite build && rm -rf docs/assets && rsync -ahP dist/ docs/",
+    "build": "vite build && npm run remove-assets && npm run copy-dist && npm run copy-favicon",
     "preview": "vite preview",
-    "prod": "cross-env NODE_ENV=production npm run build && rm -rf docs/assets && rsync -ahP dist/ docs/",
+    "prod": "cross-env NODE_ENV=production npm run build",
     "start": "npm run -s dev",
-    "watch": "npm run -s dev"
+    "watch": "npm run -s dev",
+    "remove-assets": "rm -rf docs/assets",
+    "copy-dist": "rsync -ahP dist/ docs/",
+    "copy-favicon": "cp -v docs/favicon.ico docs/assets/"
   },
   "devDependencies": {
     "@types/chai": "^4.3.4",
