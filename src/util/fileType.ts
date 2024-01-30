@@ -8,6 +8,10 @@ export const types = [
     type: "audio/ogg",
   },
   {
+    regex: /ogv$/,
+    type: "video/ogg",
+  },
+  {
     regex: /mp3$/,
     type: "audio/mpeg",
   },
