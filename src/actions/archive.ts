@@ -19,7 +19,7 @@ const searchFields = [
 ].join("&fl[]=");
 
 const searchURL = (q: string) =>
-  `${searchPage}?q=${q}&fl[]=${searchFields}&rows=100&output=json`;
+  `${searchPage}?q=${q}&fl[]=${searchFields}&rows=200&output=json`;
 
 const create = actionCreatorFactory("archive");
 
